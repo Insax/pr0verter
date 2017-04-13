@@ -15,6 +15,22 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('converter', function () {
+    return view('converter/home');
+});
+
+Route::get('subs', function () {
+    return view('subs/home');
+});
+
+Route::get('faq', function () {
+    return view('faq/home');
+});
+
+Route::get('contact', function () {
+    return view('contact/home');
+});
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');

@@ -1,9 +1,67 @@
 
 // Fonts
-@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
+@import url(https://fonts.googleapis.com/css?family=Comfortaa);
 
 // Variables
 @import "variables";
 
 // Bootstrap
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+
+
+
+
+
+
+// Panels
+$panel-default-heading-bg: #161618;
+
+.form-control {
+  background-color: #161618;
+}
+
+.full-height {
+  height: 20vh;
+}
+
+.flex-center {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.position-ref {
+  position: relative;
+}
+
+.content {
+  text-align: center;
+}
+
+.title {
+  font-size: 84px;
+}
+
+.links > a {
+  padding: 0 25px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .1rem;
+  text-transform: uppercase;
+}
+.m-b-md {
+  margin-bottom: 30px;
+}
+
+.panel {
+  background-color: #161618;
+}
+
+.panel-body {
+  background-color: #161618;
+}
+
+.panel-default > .panel-heading {
+  color: #636B6F;
+  background-color: #161618;
+}
