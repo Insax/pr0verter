@@ -17,6 +17,7 @@ class CreateDataTable extends Migration
             $table->integer('guid');
             $table->integer('user_id');
             $table->ipAddress('uploader_ip');
+            $table->boolean('deleted');
             $table->timestamps();
         });
     }
