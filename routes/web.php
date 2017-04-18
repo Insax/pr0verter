@@ -31,6 +31,8 @@ Route::get('contact', function () {
     return view('contact/home');
 });
 
+Route::post('convert', 'ConverterController@upload');
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');

@@ -177,6 +177,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
+        Ixudra\Curl\CurlServiceProvider::class,
 
     ],
 
@@ -227,7 +228,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'FFMpeg' => Pbmedia\LaravelFFMpeg\FFMpegFacade::class,
-
+        'Curl'          => Ixudra\Curl\Facades\Curl::class,
     ],
 
 ];

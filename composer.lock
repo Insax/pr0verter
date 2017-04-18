@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "76533201d9a029b3308d557cf97ef157",
-    "content-hash": "28c84f2bb6f821b0b63e01a17e1e2a05",
+    "hash": "29fbc92d7331581fc593314b6eef37bc",
+    "content-hash": "33134b5b1032aae0c289e004e24912f2",
     "packages": [
         {
             "name": "alchemy/binary-driver",
@@ -321,6 +321,49 @@
                 "event-emitter"
             ],
             "time": "2012-11-02 14:49:47"
+        },
+        {
+            "name": "ixudra/curl",
+            "version": "6.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ixudra/curl.git",
+                "reference": "0b801533e9ac5acdb2f0d69984c8b495deada210"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ixudra/curl/zipball/0b801533e9ac5acdb2f0d69984c8b495deada210",
+                "reference": "0b801533e9ac5acdb2f0d69984c8b495deada210",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": ">=4.0",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ixudra\\Curl\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jan Oris",
+                    "email": "jan.oris@ixudra.be"
+                }
+            ],
+            "description": "Custom PHP Curl library for the Laravel 5 framework - developed by Ixudra",
+            "homepage": "http://ixudra.be",
+            "keywords": [
+                "Ixudra",
+                "curl",
+                "laravel"
+            ],
+            "time": "2017-03-29 08:23:59"
         },
         {
             "name": "jakub-onderka/php-console-color",

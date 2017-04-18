@@ -65,3 +65,44 @@ $panel-default-heading-bg: #161618;
   color: #636B6F;
   background-color: #161618;
 }
+
+.btn-file {
+  background-color: #161618;
+}
+
+.input-group > .input-group-addon {
+  background-color: #161618;
+}
+
+.example {
+  display             : -webkit-box;
+  display             : -ms-flexbox;
+  display             : flex;
+  -webkit-transition  : all .5s;
+  transition          : all .5s;
+  -webkit-user-select : none;
+  -moz-user-select    : none;
+  -ms-user-select     : none;
+  user-select         : none;
+  background          : -webkit-linear-gradient(top, white, black);
+  background          : linear-gradient(to bottom, white, black);
+}
+
+#full{
+  position: absolute;
+  top: 0;
+  left: 0;
+  height:100vh;
+  width: 100%;
+  background-color: #161618;
+  z-index: 9999;
+  opacity: 0.9;
+  display: none;
+}
+
+#progress{
+  margin-top: 30%;
+  color: #f2f5f4;
+  background-color: #161618;
+  font-size: 2em;
+}
