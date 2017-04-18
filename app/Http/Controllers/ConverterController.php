@@ -89,6 +89,7 @@ class ConverterController extends Controller
         if($data) {
             $content_length = "unknown";
             $status = "unknown";
+            $result = 0;
 
             if(preg_match("/^HTTP\/1\.[01] (\d\d\d)/", $data, $matches))
                 $status = (int)$matches[1];
@@ -99,14 +100,12 @@ class ConverterController extends Controller
             // http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
             if($status == 200 || ($status > 300 && $status <= 308))
                 $result = $content_length;
+
+            if(preg_match( '/^video.*/', $response) && $result < 104857600)
+                return true;
+            else
+                return false;
         }
-
-        if(preg_match( '/^video.*/', $response) && $result < 104857600)
-            return true;
-        else
-            return false;
-
-
-
+        return false;
     }
 }
