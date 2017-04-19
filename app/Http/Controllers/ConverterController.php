@@ -2,29 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use FFMpeg\Format\Video\X264;
+use App\Jobs\ConvertVideo;
 use Ixudra\Curl\Facades\Curl;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Request;
 use App\Http\Requests\UploadFileToConvert;
-use Pbmedia\LaravelFFMpeg\FFMpegFacade as FFMpeg;
+
+
 
 class ConverterController extends Controller
 {
-    private $saveLocation;
-    private $rndName;
-    private $requestSound;
-    private $requestAutoResolution;
-    private $requestLimit;
-    private $requestURL;
-    private $requestFile;
-    private $requestSubtitle;
-    private $userID;
-    private $extension;
-    private $duration;
-    private $status;
+    /**
+     * @var array
+     */
+    private $params;
 
 
     /**
@@ -39,34 +32,51 @@ class ConverterController extends Controller
 
     /**
      * Upload Handling Method - Redirects to Front or Progress Page
+     *
      * @param UploadFileToConvert $request
      * @return $this|string
      */
     public function upload(UploadFileToConvert $request)
     {
-        $this->saveLocation             = storage_path().'/app';
-        $this->rndName                  = str_random(64);
-        $this->requestSound             = $request->input('sound', 'off');
-        $this->requestAutoResolution    = $request->input('autoResolution', 'off');
-        $this->requestLimit             = $request->input('limit', 6);
-        $this->requestURL               = $request->input('url');
-        $this->requestFile              = $request->file('file');
-        $this->requestSubtitle          = $request->input('subtitle');
+        $saveLocation             = storage_path().'/app';
+        $rndName                  = str_random(64);
+        $requestSound             = $request->input('sound', 'off');
+        $requestAutoResolution    = $request->input('autoResolution', 'off');
+        $requestLimit             = $request->input('limit', 6);
+        $requestURL               = $request->input('url');
+        $requestFile              = $request->file('file');
 
+        if($requestLimit > 30)
+            $requestLimit = 30;
+        if($requestLimit < 1)
+            $requestLimit = 1;
 
-        if($this->requestFile) {
-            $this->extension = '.'.Input::file('file')->getClientOriginalExtension();
-            Input::file('file')->move($this->saveLocation, $this->rndName);
-            $this->saveToDB();
-            $this->convert();
-            echo '<meta http-equiv="refresh" content="1;url=/progress/'.$this->rndName.'\" />';
+        if($requestSound === 'on')
+            $requestSound = true;
+        else
+            $requestSound = false;
+
+        if($requestAutoResolution === 'on')
+            $requestAutoResolution = true;
+        else
+            $requestAutoResolution = false;
+
+        if($requestFile) {
+            $extension = '.'.Input::file('file')->getClientOriginalExtension();
+            Input::file('file')->move($saveLocation, $rndName);
+            $this->saveToDB($rndName, $extension);
+            dispatch(new ConvertVideo($saveLocation, $rndName, $requestSound, $requestAutoResolution, $requestLimit))->onQueue('processing');
+            echo '<meta http-equiv="refresh" content="0;url=/progress/'.$rndName.'\" />';
+
         }
-        elseif ($this->requestURL) {
-            if($this->validateRemoteFile()) {
-                $this->extension = $this->getExtension();
-                Curl::to($this->requestURL)->download($this->saveLocation.'/'.$this->rndName);
-                echo '<meta http-equiv="refresh" content="1;url=/progress/'.$this->rndName.'\" />';
-                $this->convert();
+        elseif ($requestURL) {
+            if($this->validateRemoteFile($requestURL)) {
+                $extension = $this->getExtension($requestURL);
+                Curl::to($requestURL)->download($saveLocation.'/'.$rndName);
+                $this->saveToDB($rndName, $extension);
+                dispatch(new ConvertVideo($saveLocation, $rndName, $requestSound, $requestAutoResolution, $requestLimit))->onQueue('converting');
+                echo '<meta http-equiv="refresh" content="0;url=/progress/'.$rndName.'\" />';
+
             }
             else
                 return back()->withInput();
@@ -77,32 +87,46 @@ class ConverterController extends Controller
 
     }
 
-    public function progress($guid) {
-        if(DB::table('data')->where('guid', $guid)->pluck('guid')) {
-            return var_dump($this->status);//view('converter.progress');
+    /**
+     * @param $guid
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function progress($guid)
+    {
+        DB::table('data')->where('guid', $guid)->value('guid');
+        if(DB::table('data')->where('guid', $guid)->value('guid') == $guid) {
+            //return view('converter.progress');
+            var_dump($guid);
         }
+        else
+            return redirect()->route('welcome');
 
     }
 
-    public function convert()
-    {/*
-        $this->status = FFMpeg::open($this->rndName)
-            ->export()
-            ->toDisk('public')
-            ->inFormat(new X264('libfdk_aac', 'libx264')
-            ->on('progress', function ($video, $format, $percentage) {
-                echo "$percentage % transcoded";
-            }))->save($this->rndName . '.mp4');
-        die();*/
+    private function convert($loc, $name, $sound, $autores, $limit)
+    {
+
     }
 
-    private function getExtension() {
-        $name = explode(".", $this->requestURL);
+    /**
+     * Return the extension of a given remote file
+     *
+     * @return string
+     */
+    private function getExtension($url)
+    {
+        $name = explode(".", $url);
         $elementCount = count($name);
         return '.'.$name[$elementCount - 1];
     }
 
-    private function validateRemoteFile()
+    /**
+     * Validate the remote file given by url.
+     *
+     * @param $url
+     * @return bool
+     */
+    private function validateRemoteFile($url)
     {
         $curl = curl_init($this->requestURL);
         curl_setopt( $curl, CURLOPT_NOBODY, true );
@@ -137,17 +161,27 @@ class ConverterController extends Controller
         return false;
     }
 
-    private function saveToDB() {
-        Auth::guest() ? $this->userID = 0 : $this->userID = Auth::id();
+    /**
+     * Save validated data to DB
+     *
+     * @param $name
+     * @param $ext
+     *
+     * @return void
+     */
+    private function saveToDB($name, $ext)
+    {
+        Auth::guest() ? $userID = 0 : $userID = Auth::id();
         DB::table('data')->insert([[
-            'guid' => $this->rndName,
-            'user_id' => $this->userID,
+            'guid' => $name,
+            'user_id' => $userID,
             'uploader_ip' => Request::ip(),
             'deleted' => 0,
             'duration' => 0,
-            'origEnding' => $this->extension,
+            'origEnding' => $ext,
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
         ]]);
     }
+
 }

@@ -9,7 +9,7 @@
         "ixudra/curl": "^6.10",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
-        "pbmedia/laravel-ffmpeg": "^1.1"
+        "php-ffmpeg/php-ffmpeg": "^0.9.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

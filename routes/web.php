@@ -13,27 +13,23 @@
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 Route::get('converter', function () {
     return view('converter/home');
-});
-
-Route::get('subs', function () {
-    return view('subs/home');
-});
+})->name('converter');
 
 Route::get('faq', function () {
     return view('faq/home');
-});
+})->name('faq');
 
 Route::get('contact', function () {
     return view('contact/home');
-});
+})->name('contact');
 
 Route::post('convert', 'ConverterController@upload')->name('upload');
 Route::get('progress/{guid}', 'ConverterController@progress')->name('progress');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index');
+Route::get('/home', 'HomeController@index')->name('home');
