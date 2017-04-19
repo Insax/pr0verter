@@ -16,7 +16,7 @@ class ConvertVideo implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
 
-    public static $duration;
+    public $duration;
     /**
      * @var integer
      */
@@ -88,18 +88,21 @@ class ConvertVideo implements ShouldQueue
         $ffprobe  = FFProbe::create($this->params);
         $ffmpeg   = FFMpeg::create($this->params);
 
-        self::$duration = $ffprobe
+
+        $this->duration = $ffprobe
             ->format($this->loc.'/'.$this->name) // extracts file informations
             ->get('duration');             // returns the duration property
 
         $video = $ffmpeg->open($this->loc.'/'.$this->name);
-
+        //TODO: Format Logic here!
         $format = new X264();
         $format->setAudioCodec('aac');
         $format->on('progress', function ($video, $format, $percentage) {
-
+            //TODO: Insert into DB --
         });
 
-        $video->save($format, $this->loc.'/public/'.$this->name.'.mp4');
+        if($video->save($format, $this->loc.'/public/'.$this->name.'.mp4')) {
+            //TODO: Set Percentage to 100% and send update to client.
+        }
     }
 }
