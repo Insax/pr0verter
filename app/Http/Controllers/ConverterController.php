@@ -94,8 +94,8 @@ class ConverterController extends Controller
      */
     public function progress($guid)
     {
-        DB::table('data')->where('guid', $guid)->value('guid');
         if(DB::table('data')->where('guid', $guid)->value('guid') == $guid) {
+            var_dump();
             //return view('converter.progress');
         }
         else
