@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Requests\UploadFileToConvert;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Redirect;
-use Pbmedia\LaravelFFMpeg\FFMpegFacade as FFMpeg;
+use FFMpeg\Format\Video\X264;
 use Ixudra\Curl\Facades\Curl;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
+use App\Http\Requests\UploadFileToConvert;
+use Pbmedia\LaravelFFMpeg\FFMpegFacade as FFMpeg;
 
 class ConverterController extends Controller
 {
@@ -18,6 +20,12 @@ class ConverterController extends Controller
     private $requestLimit;
     private $requestURL;
     private $requestFile;
+    private $requestSubtitle;
+    private $userID;
+    private $extension;
+    private $duration;
+    private $status;
+
 
     /**
      * Create a new controller instance.
@@ -30,9 +38,9 @@ class ConverterController extends Controller
     }
 
     /**
-     * Handling after Fileupload is Requested, Checked and Validated
-     *
+     * Upload Handling Method - Redirects to Front or Progress Page
      * @param UploadFileToConvert $request
+     * @return $this|string
      */
     public function upload(UploadFileToConvert $request)
     {
@@ -43,29 +51,49 @@ class ConverterController extends Controller
         $this->requestLimit             = $request->input('limit', 6);
         $this->requestURL               = $request->input('url');
         $this->requestFile              = $request->file('file');
+        $this->requestSubtitle          = $request->input('subtitle');
 
-        if(!$this->requestURL && !$this->requestFile)
-            Redirect::url('converter');
 
         if($this->requestFile) {
-            $this->rndName .= '.'.Input::file('file')->getClientOriginalExtension();
+            $this->extension = '.'.Input::file('file')->getClientOriginalExtension();
             Input::file('file')->move($this->saveLocation, $this->rndName);
+            $this->saveToDB();
             $this->convert();
+            echo '<meta http-equiv="refresh" content="1;url=/progress/'.$this->rndName.'\" />';
         }
         elseif ($this->requestURL) {
             if($this->validateRemoteFile()) {
-                $this->rndName .= $this->getExtension();
+                $this->extension = $this->getExtension();
                 Curl::to($this->requestURL)->download($this->saveLocation.'/'.$this->rndName);
+                echo '<meta http-equiv="refresh" content="1;url=/progress/'.$this->rndName.'\" />';
                 $this->convert();
             }
+            else
+                return back()->withInput();
         }
+        else
+            return back()->withInput();
 
 
     }
 
+    public function progress($guid) {
+        if(DB::table('data')->where('guid', $guid)->pluck('guid')) {
+            return var_dump($this->status);//view('converter.progress');
+        }
 
-    private function convert() {
+    }
 
+    public function convert()
+    {/*
+        $this->status = FFMpeg::open($this->rndName)
+            ->export()
+            ->toDisk('public')
+            ->inFormat(new X264('libfdk_aac', 'libx264')
+            ->on('progress', function ($video, $format, $percentage) {
+                echo "$percentage % transcoded";
+            }))->save($this->rndName . '.mp4');
+        die();*/
     }
 
     private function getExtension() {
@@ -107,5 +135,19 @@ class ConverterController extends Controller
                 return false;
         }
         return false;
+    }
+
+    private function saveToDB() {
+        Auth::guest() ? $this->userID = 0 : $this->userID = Auth::id();
+        DB::table('data')->insert([[
+            'guid' => $this->rndName,
+            'user_id' => $this->userID,
+            'uploader_ip' => Request::ip(),
+            'deleted' => 0,
+            'duration' => 0,
+            'origEnding' => $this->extension,
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
+        ]]);
     }
 }

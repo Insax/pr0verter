@@ -14,10 +14,12 @@ class CreateDataTable extends Migration
     public function up()
     {
         Schema::create('data', function (Blueprint $table) {
-            $table->integer('guid');
+            $table->longText('guid');
             $table->integer('user_id');
             $table->ipAddress('uploader_ip');
             $table->boolean('deleted');
+            $table->text('origEnding');
+            $table->time('duration');
             $table->timestamps();
         });
     }

@@ -83,6 +83,11 @@
                                             <input name="autoResolution" type="checkbox" {{ old('remember') ? 'autoResolution' : '' }}> Auflösung beibehalten
                                         </label>
                                     </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input name="subtitle" type="checkbox" {{ old('remember') ? 'subtitle' : '' }}> Untertitel hinzufügen
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -44,7 +44,6 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         <li><a href="{{ url('converter') }}">mp4 Converter</a></li>
-                        <li><a href="{{ url('subs') }}">Untertitel Editor</a></li>
                         <li><a href="{{ url('faq') }}">FAQ</a></li>
                         <li><a href="{{ url('contact') }}">Kontakt</a></li>
                     </ul>

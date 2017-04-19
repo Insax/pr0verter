@@ -31,7 +31,8 @@ Route::get('contact', function () {
     return view('contact/home');
 });
 
-Route::post('convert', 'ConverterController@upload');
+Route::post('convert', 'ConverterController@upload')->name('upload');
+Route::get('progress/{guid}', 'ConverterController@progress')->name('progress');
 
 Auth::routes();
 

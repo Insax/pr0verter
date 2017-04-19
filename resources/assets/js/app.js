@@ -7,4 +7,4 @@
 
 require('./bootstrap');
 require('./jQueryForm.min');
-//require('./uploadForm');
+require('./uploadForm');

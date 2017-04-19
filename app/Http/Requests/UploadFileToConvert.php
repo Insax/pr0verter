@@ -28,6 +28,7 @@ class UploadFileToConvert extends FormRequest
             'limit'             => 'nullable|integer',
             'sound'             => 'nullable|string|max:2',
             'autoResolution'    => 'nullable|string|max:2',
+            'subtitle'          => 'nullable|string|max:2',
             'file'              => 'nullable|mimes:webm,mp4,mkv,mov,avi,wmv,flv,3gp,gif,gifv'
         ];
     }

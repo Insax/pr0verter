@@ -13,6 +13,9 @@ pr0verter is a Web Application for manipulating Video Data with FFmpeg.
 - MySQL
 
 ## Install instructions
-Download this Repository via 
-- `git clone `
+Download this Repository via Clone or Zip Download <br>
+Run `composer install`, `cp .env.example .env`, `php artisan key:generate`<br>
+Edit .env to your needs <br>
+Run `php artisan migrate`
 
+Have fun!

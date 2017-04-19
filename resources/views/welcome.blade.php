@@ -11,7 +11,6 @@
 
         <div class="links">
             <a href="{{ url('converter') }}">mp4 Converter</a>
-            <a href="{{ url('subs') }}">Untertitel Editor</a>
             <a href="{{ url('faq') }}">FAQ</a>
             <a href="{{ url('contact') }}">Kontakt</a>
         </div>
