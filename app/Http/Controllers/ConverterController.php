@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Request;
 use App\Http\Requests\UploadFileToConvert;
+use FFMpeg\Format\ProgressListener\VideoProgressListener;
 
 
 
@@ -65,7 +66,7 @@ class ConverterController extends Controller
             $extension = '.'.Input::file('file')->getClientOriginalExtension();
             Input::file('file')->move($saveLocation, $rndName);
             $this->saveToDB($rndName, $extension);
-            dispatch(new ConvertVideo($saveLocation, $rndName, $requestSound, $requestAutoResolution, $requestLimit))->onQueue('processing');
+            dispatch(new ConvertVideo($saveLocation, $rndName, $requestSound, $requestAutoResolution, $requestLimit));
             echo '<meta http-equiv="refresh" content="0;url=/progress/'.$rndName.'\" />';
 
         }
@@ -74,7 +75,7 @@ class ConverterController extends Controller
                 $extension = $this->getExtension($requestURL);
                 Curl::to($requestURL)->download($saveLocation.'/'.$rndName);
                 $this->saveToDB($rndName, $extension);
-                dispatch(new ConvertVideo($saveLocation, $rndName, $requestSound, $requestAutoResolution, $requestLimit))->onQueue('converting');
+                dispatch(new ConvertVideo($saveLocation, $rndName, $requestSound, $requestAutoResolution, $requestLimit));
                 echo '<meta http-equiv="refresh" content="0;url=/progress/'.$rndName.'\" />';
 
             }
@@ -96,15 +97,9 @@ class ConverterController extends Controller
         DB::table('data')->where('guid', $guid)->value('guid');
         if(DB::table('data')->where('guid', $guid)->value('guid') == $guid) {
             //return view('converter.progress');
-            var_dump($guid);
         }
         else
             return redirect()->route('welcome');
-
-    }
-
-    private function convert($loc, $name, $sound, $autores, $limit)
-    {
 
     }
 
