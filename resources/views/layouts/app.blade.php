@@ -12,6 +12,8 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/jquery-ui.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/jquery-ui.structure.min.css') }}" rel="stylesheet">
 
     <!-- Scripts -->
     <script>
@@ -21,6 +23,7 @@
     </script>
 
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
 </head>
 <body>
     <div id="app">
