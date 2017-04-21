@@ -167,7 +167,7 @@ class ConvertVideo implements ShouldQueue
 
         $bitrate = ($this->limit * 8192) / $this->duration;
 
-        !$this->sound ?: $bitrate = -$this->sound;
+        !$this->sound ? : $bitrate -= $this->sound;
         return $bitrate . 'k';
     }
 

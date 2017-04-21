@@ -201,8 +201,6 @@ class ConverterController extends Controller
             'guid' => $name,
             'user_id' => $userID,
             'uploader_ip' => Request::ip(),
-            'deleted' => 0,
-            'duration' => 0,
             'origEnding' => $ext,
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
