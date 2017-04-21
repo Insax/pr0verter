@@ -73,9 +73,10 @@
                             <div class="panel-heading">Zusatzinfos:</div>
                             <div class="panel-body">
                                 <div class="form-group">
-                                    <div class="checkbox">
+                                    <div class="slider">
                                         <label>
-                                            <input name="sound" type="checkbox" {{ old('sound') ? 'checked' : '' }}> Mit Ton
+                                            <p id="soundText">Sound</p>
+                                            <input id="sound" name="sound" type="range" min="0" max="3" value="2" step="1" {{ old('sound') ? 'checked' : '' }}>
                                         </label>
                                     </div>
                                     <div class="checkbox">

@@ -7,6 +7,11 @@ $(function () {
         window.scrollTo(0,document.body.scrollHeight);
     });
 
+    $('#sound').on('change', function(e){
+        console.log("e");
+        $('p#soundText').text('hallo');
+    });
+
     $('#upload_form').ajaxForm({
         beforeSend: function () {
             status.empty();
