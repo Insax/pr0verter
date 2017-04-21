@@ -22,7 +22,7 @@ class ConvertVideo implements ShouldQueue
     private $maxDuration;
 
     /**
-     * @var integer
+     * @var float
      */
     private $duration;
     /**
@@ -116,9 +116,10 @@ class ConvertVideo implements ShouldQueue
         $ffmpeg = FFMpeg::create($this->params);
 
 
-        $this->duration = $ffprobe
-            ->format($this->loc . '/' . $this->name)// extracts file informations
-            ->get('duration');             // returns the duration property
+        $this->duration = (float) $ffprobe->format($this->loc . '/' . $this->name)->get('duration');
+
+        $this->px = $ffprobe->streams($this->loc . '/' . $this->name)->videos()->first()->getDimensions()->getWidth();
+        $this->py = $ffprobe->streams($this->loc . '/' . $this->name)->videos()->first()->getDimensions()->getHeight();
 
         $video = $ffmpeg->open($this->loc . '/' . $this->name);
 
@@ -160,18 +161,17 @@ class ConvertVideo implements ShouldQueue
         }
     }
 
-    function getBitrate()
+    private function getBitrate()
     {
-
         $this->duration = min($this->duration, $this->maxDuration);
 
-        $bitrate = ($this->limit * 8192) / $this->duration;
+        $bitrate = ($this->limit * 8192) / (float) $this->duration;
 
         !$this->sound ? : $bitrate -= $this->sound;
-        return $bitrate . 'k';
+        return $bitrate;
     }
 
-    function getAutoResolution()
+    private function getAutoResolution()
     {
         if ($this->duration > 30 && $this->duration < 60 && $this->px >= 480) {
             if ($this->px * (16 / 9) === $this->py) {

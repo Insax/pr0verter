@@ -28,7 +28,8 @@ class ConverterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('throttle:5,10');
+        $this->middleware('web');
+        //$this->middleware('throttle:5,10');
     }
 
     /**
