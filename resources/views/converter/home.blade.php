@@ -1,5 +1,50 @@
 @extends('layouts.app')
 @section('content')
+<script>
+    $( function() {
+        var text = 'Kein Ton';
+        $( "#slider" ).slider({
+            value: {{ old('sound') ? old('sound') : 0 }},
+            min: 0,
+            max: 3,
+            step: 1,
+            slide: function( event, ui ) {
+                switch(ui.value) {
+                    case 0:
+                        text = 'Kein Ton';
+                        break;
+                    case 1:
+                        text = 'Schlechte Qualität';
+                        break;
+                    case 2:
+                        text = 'Mittle Qualität';
+                        break;
+                    case 3:
+                        text = 'Hohe Qualität';
+                        break;
+                }
+                $( "#sound" ).val( text );
+                $( "#refsound" ).val(ui.value);
+            }
+        });
+        switch($( "#slider" ).slider( "value" )) {
+            case 0:
+                text = 'Kein Ton';
+                break;
+            case 1:
+                text = 'Schlechte Qualität';
+                break;
+            case 2:
+                text = 'Mittle Qualität';
+                break;
+            case 3:
+                text = 'Hohe Qualität';
+                break;
+        }
+        $( "#sound" ).val( text );
+        $( "#refsound" ).val( $( "#slider" ).slider( "value" ) );
+    } );
+</script>
     <div class="content">
         <div class="title m-b-md">
             mp4 Converter
@@ -72,21 +117,16 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">Zusatzinfos:</div>
                             <div class="panel-body">
-                                <div class="form-group">
-                                    <div class="slider">
+                                <div class="form-group>
+                                        <label for="sound">Ton:</label>
+                                        <input type="text" id="sound" value="{{ old('sound') }}" readonly style="background-color: #161618; border: 0px;">
+                                        <input type="hidden" id="refsound" name="sound" value="{{ old('sound') }}">
+                                    <div id="slider" class="col-xs-6 col-xs-offset-3"></div>
+                                    <br/>
+                                    <br/>
+                                    <div class="checkbox row">
                                         <label>
-                                            <p id="soundText">Sound</p>
-                                            <input id="sound" name="sound" type="range" min="0" max="3" value="2" step="1" {{ old('sound') ? 'checked' : '' }}>
-                                        </label>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label>
-                                            <input name="autoResolution" type="checkbox" {{ old('remember') ? 'autoResolution' : '' }}> Auflösung beibehalten
-                                        </label>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label>
-                                            <input name="subtitle" type="checkbox" {{ old('remember') ? 'subtitle' : '' }}> Untertitel hinzufügen
+                                            <input name="autoResolution" type="checkbox" {{ old('autoResolution') ? 'checked' : '' }}> Auflösung beibehalten
                                         </label>
                                     </div>
                                 </div>

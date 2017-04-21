@@ -14,6 +14,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/jquery-ui.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/jquery-ui.structure.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/jquery-ui.theme.min.css') }}" rel="stylesheet">
 
     <!-- Scripts -->
     <script>

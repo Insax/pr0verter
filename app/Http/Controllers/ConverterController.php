@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\ConvertVideo;
 use Ixudra\Curl\Facades\Curl;
+use App\Http\Requests\CanDelete;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
@@ -36,7 +37,7 @@ class ConverterController extends Controller
     {
         $saveLocation             = storage_path().'/app';
         $rndName                  = str_random(64);
-        $requestSound             = $request->input('sound', 'off');
+        $requestSound             = $request->input('sound', 0);
         $requestAutoResolution    = $request->input('autoResolution', 'off');
         $requestLimit             = $request->input('limit', 6);
         $requestURL               = $request->input('url');
@@ -47,10 +48,10 @@ class ConverterController extends Controller
         if($requestLimit < 1)
             $requestLimit = 1;
 
-        if($requestSound === 'on')
-            $requestSound = true;
-        else
-            $requestSound = false;
+        if($requestSound > 3)
+            $requestSound = 3;
+        if($requestSound < 0)
+            $requestSound = 0;
 
         if($requestAutoResolution === 'on')
             $requestAutoResolution = true;
@@ -89,7 +90,7 @@ class ConverterController extends Controller
      */
     public function progress($guid)
     {
-        if(DB::table('data')->where('guid', $guid)->value('guid') == $guid)
+        if(DB::table('data')->where([['guid', '=', $guid], ['deleted', '=', 0]])->value('guid') == $guid)
             return view('converter.progress', ['guid' => $guid]);
         else
             return view('error.404');
@@ -101,7 +102,7 @@ class ConverterController extends Controller
      */
     public function show($guid)
     {
-        if(DB::table('data')->where('guid', $guid)->value('guid') == $guid)
+        if(DB::table('data')->where([['guid', '=', $guid], ['deleted', '=', 0]])->value('guid') == $guid)
             return view('converter.show', ['view' => url('view').'/'.$guid, 'download' => url('download').'/'.$guid]);
         else
             return view('error.404');
@@ -113,7 +114,7 @@ class ConverterController extends Controller
      */
     public function view($guid)
     {
-        if(DB::table('data')->where('guid', $guid)->value('guid') == $guid)
+        if(DB::table('data')->where([['guid', '=', $guid], ['deleted', '=', 0]])->value('guid') == $guid)
         {
             echo header("Content-Type: video/mp4");
             echo header("Content-Length: ".filesize(storage_path().'/app/public/'.$guid.'.mp4'));
@@ -129,7 +130,7 @@ class ConverterController extends Controller
      */
     public function download($guid)
     {
-        if(DB::table('data')->where('guid', $guid)->value('guid') == $guid)
+        if(DB::table('data')->where([['guid', '=', $guid], ['deleted', '=', 0]])->value('guid') == $guid)
         {
             echo header("Content-Type: video/mp4");
             echo header("Content-Length: ".filesize(storage_path().'/app/public/'.$guid.'.mp4'));
@@ -147,12 +148,29 @@ class ConverterController extends Controller
     public function duration(AskForDuration $request)
     {
         $guid = $request->input('file_name');
-        if(DB::table('data')->where('guid', $guid)->value('guid') == $guid)
+        if(DB::table('data')->where([['guid', '=', $guid], ['deleted', '=', 0]])->value('guid') == $guid)
         {
             return DB::table('data')->where('guid', $guid)->value('progress');
         }
         else
             return 'error';
+    }
+
+    /**
+     * @param AskForDuration $request
+     * @return string
+     */
+    public function delete(CanDelete $request)
+    {
+        $guid = $request->input('guid');
+        if(DB::table('data')->where('guid', '=', $guid)->value('user_id') == Auth::id() || DB::table('users')->where('id', '=', Auth::id())->value('flag') == 1)
+        if(DB::table('data')->where([['guid', '=', $guid], ['deleted', '=', 0]])->value('guid') == $guid)
+        {
+            DB::table('data')->where('guid', '=', $guid)->update(['deleted' => 1]);
+            return redirect()->back();
+        }
+        else
+            return redirect()->back();
     }
 
     /**
