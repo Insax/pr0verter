@@ -4,7 +4,7 @@
     $( function() {
         var text = 'Kein Ton';
         $( "#slider" ).slider({
-            value: {{ old('sound') ? old('sound') : 0 }},
+            value: {{ old('sound') ? old('sound') : 2 }},
             min: 0,
             max: 3,
             step: 1,
