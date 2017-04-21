@@ -63,7 +63,7 @@ class ConverterController extends Controller
             Input::file('file')->move($saveLocation, $rndName);
             $this->saveToDB($rndName, $extension);
             dispatch((new ConvertVideo($saveLocation, $rndName, $requestSound, $requestAutoResolution, $requestLimit))->onQueue('convert'));
-            echo '<meta http-equiv="refresh" content="0;url=/progress/'.$rndName.'\" />';
+            echo '<meta http-equiv="refresh" content="0;url=/progress/'.$rndName.'/" />';
 
         }
         elseif ($requestURL) {
@@ -72,7 +72,7 @@ class ConverterController extends Controller
                 Curl::to($requestURL)->download($saveLocation.'/'.$rndName);
                 $this->saveToDB($rndName, $extension);
                 dispatch((new ConvertVideo($saveLocation, $rndName, $requestSound, $requestAutoResolution, $requestLimit))->onQueue('convert'));
-                echo '<meta http-equiv="refresh" content="0;url=/progress/'.$rndName.'\" />';
+                echo '<meta http-equiv="refresh" content="0;url=/progress/'.$rndName.'/" />';
 
             }
             else
