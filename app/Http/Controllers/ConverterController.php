@@ -130,8 +130,9 @@ class ConverterController extends Controller
             echo readfile(storage_path().'/app/public/'.$guid.'.mp4');
         }
         else
-            return view('error.600');
+            return view('error.404');
     }
+
     /**
      * Return the extension of a given remote file
      *
