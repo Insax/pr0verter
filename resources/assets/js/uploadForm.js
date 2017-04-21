@@ -2,15 +2,6 @@ $(function () {
     var bar = $('#upload_bar');
     var status = $('#status');
 
-    $('#support').on('click', function (event) {
-        document.getElementById("supportadd").style.display = "flex";
-        window.scrollTo(0,document.body.scrollHeight);
-    });
-
-    $('#sound').on('change', function(e){
-        console.log("e");
-        $('p#soundText').text('hallo');
-    });
 
     $('#upload_form').ajaxForm({
         beforeSend: function () {
