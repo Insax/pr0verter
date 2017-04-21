@@ -193,7 +193,7 @@ class ConverterController extends Controller
      */
     private function validateRemoteFile($url)
     {
-        $curl = curl_init($this->requestURL);
+        $curl = curl_init($url);
         curl_setopt( $curl, CURLOPT_NOBODY, true );
         curl_setopt( $curl, CURLOPT_HEADER, true );
         curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );

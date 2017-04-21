@@ -84,7 +84,7 @@
                             <div class="panel-heading">URL:</div>
                             <div class="panel-body">
                                 <div class="form-group{{ $errors->has('url') ? ' has-error' : '' }}">
-                                    <input type="text" class="form-control" size=30 name="url" id="url value="{{ old('url') }}"/>
+                                    <input type="text" class="form-control" size=30 name="url" id="url" value="{{ old('url') }}"/>
                                 </div>
                                 @if ($errors->has('url'))
                                     <span class="help-block">
