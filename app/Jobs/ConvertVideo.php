@@ -101,6 +101,13 @@ class ConvertVideo implements ShouldQueue
     /**
      * Execute the job.
      *
+     * converts video
+     * short description of parameters
+     * -t: set max video length
+     * -profile:v baseline -level 3.0: pr0gramm only supports baseline lv 3.0
+     * -preset: sets conversion speed
+     * -fs: ffmpeg cuts on this size
+     *
      * @return void
      */
     public function handle()
@@ -114,10 +121,12 @@ class ConvertVideo implements ShouldQueue
             ->get('duration');             // returns the duration property
 
         $video = $ffmpeg->open($this->loc . '/' . $this->name);
-        $video->filters()->custom("-t $this->maxDuration"); // set max video length
-        $video->filters()->custom("-profile:v baseline -level 3.0"); // pr0 only supports baseline lv3, maybe 3.1, but first test with 3.0
-        $video->filters()->custom("-preset fast"); // maybe change to normal
-        $video->filters()->custom("-fs " . $this->limit * 8192 . "k"); // cut on limit
+
+        $video->filters()->custom("-t $this->maxDuration");
+        $video->filters()->custom("-profile:v baseline -level 3.0");
+        $video->filters()->custom("-preset normal");
+        $video->filters()->custom("-fs " . $this->limit * 8192 . "k");
+
         if (!$this->res) {
             $this->getAutoResolution();
             $video->filters()->resize(new Dimension($this->px, $this->py));
@@ -126,7 +135,7 @@ class ConvertVideo implements ShouldQueue
         !$this->sound ?: $format->setAudioCodec('aac');
         switch ($this->sound) {
             case 0:
-                $video->filters()->custom("-an"); // removes sound
+                $video->filters()->custom("-an");
                 break;
             case 1:
                 $format->setAudioKiloBitrate(60); // test value
@@ -146,13 +155,14 @@ class ConvertVideo implements ShouldQueue
             DB::table('data')->where('guid', $this->name)->update(['progress' => $percentage]);
         });
 
-        if ($video->save($format, $this->loc . '/public/' . $this->name . '.mp4')) {
+        if($video->save($format, $this->loc . '/public/' . $this->name . '.mp4')) {
             DB::table('data')->where('guid', $this->name)->update(['progress' => 100]);
         }
     }
 
     function getBitrate()
     {
+
         $this->duration = min($this->duration, $this->maxDuration);
 
         $bitrate = ($this->limit * 8192) / $this->duration;
