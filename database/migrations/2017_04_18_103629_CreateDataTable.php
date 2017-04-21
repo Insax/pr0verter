@@ -15,11 +15,12 @@ class CreateDataTable extends Migration
     {
         Schema::create('data', function (Blueprint $table) {
             $table->longText('guid');
-            $table->integer('user_id');
+            $table->integer('user_id')->unsigned();
             $table->ipAddress('uploader_ip');
-            $table->boolean('deleted');
             $table->text('origEnding');
-            $table->time('duration');
+            $table->integer('progress')->default(0);
+            $table->time('duration')->default(0);
+            $table->boolean('deleted')->default(0);
             $table->timestamps();
         });
     }

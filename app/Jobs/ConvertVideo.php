@@ -16,12 +16,19 @@ class ConvertVideo implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-
-    public $duration;
     /**
      * @var integer
      */
-    public $status;
+    private $maxDuration;
+
+    /**
+     * @var integer
+     */
+    private $duration;
+    /**
+     * @var integer
+     */
+    private $status;
 
     /**
      * @var array
@@ -82,6 +89,8 @@ class ConvertVideo implements ShouldQueue
         $this->res = $res;
         $this->limit = $limit;
 
+        $this->maxDuration = env('VIDEO_MAX_DURATION_IN_SECONDS', 179);
+
         $this->params = [
             'ffmpeg.binaries' => env('FFMPEG_BIN', '/usr/local/bin/ffmpeg'),
             'ffmpeg.threads' => env('FFMPEG_THREADS', 12),
@@ -105,7 +114,7 @@ class ConvertVideo implements ShouldQueue
             ->get('duration');             // returns the duration property
 
         $video = $ffmpeg->open($this->loc . '/' . $this->name);
-        $video->filters()->custom("-t 179"); // set max video length
+        $video->filters()->custom("-t $this->maxDuration"); // set max video length
         $video->filters()->custom("-profile:v baseline -level 3.0"); // pr0 only supports baseline lv3, maybe 3.1, but first test with 3.0
         $video->filters()->custom("-preset fast"); // maybe change to normal
         $video->filters()->custom("-fs " . $this->limit * 8192 . "k"); // cut on limit
@@ -113,7 +122,6 @@ class ConvertVideo implements ShouldQueue
             $this->getAutoResolution();
             $video->filters()->resize(new Dimension($this->px, $this->py));
         }
-        //TODO: Format Logic here!
         $format = new X264();
         !$this->sound ?: $format->setAudioCodec('aac');
         switch ($this->sound) {
@@ -135,17 +143,17 @@ class ConvertVideo implements ShouldQueue
         $format->setKiloBitrate($this->getBitrate());
 
         $format->on('progress', function ($video, $format, $percentage) {
-            //TODO: Insert into DB --
+            DB::table('data')->where('guid', $this->name)->update(['progress' => $percentage]);
         });
 
         if ($video->save($format, $this->loc . '/public/' . $this->name . '.mp4')) {
-            //TODO: Set Percentage to 100% and send update to client.
+            DB::table('data')->where('guid', $this->name)->update(['progress' => 100]);
         }
     }
 
     function getBitrate()
     {
-        $this->duration = min($this->duration, 179); // set value in constructor
+        $this->duration = min($this->duration, $this->maxDuration);
 
         $bitrate = ($this->limit * 8192) / $this->duration;
 
