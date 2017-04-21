@@ -11,11 +11,16 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\DB;
 
 class ConvertVideo implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * @var array
+     */
+    private $filters;
     /**
      * @var integer
      */
@@ -96,6 +101,14 @@ class ConvertVideo implements ShouldQueue
             'ffmpeg.threads' => env('FFMPEG_THREADS', 12),
             'ffprobe.binaries' => env('FFMPEG_PROBE_BIN', '/usr/local/bin/ffprobe'),
             'timeout' => env('FFMPEG_TIMEOUT', 3600)];
+
+        $this->filters = [
+            '-t', $this->maxDuration,
+            '-profile:v', 'baseline',
+            '-level',  '3.0',
+            '-preset', 'medium',
+            '-fs', $this->limit * 8192 ."k",
+        ];
     }
 
     /**
@@ -123,20 +136,16 @@ class ConvertVideo implements ShouldQueue
 
         $video = $ffmpeg->open($this->loc . '/' . $this->name);
 
-        $video->filters()->custom("-t $this->maxDuration");
-        $video->filters()->custom("-profile:v baseline -level 3.0");
-        $video->filters()->custom("-preset normal");
-        $video->filters()->custom("-fs " . $this->limit * 8192 . "k");
-
         if (!$this->res) {
             $this->getAutoResolution();
             $video->filters()->resize(new Dimension($this->px, $this->py));
         }
         $format = new X264();
-        !$this->sound ?: $format->setAudioCodec('aac');
+        $format->setAudioCodec('aac');
         switch ($this->sound) {
             case 0:
-                $video->filters()->custom("-an");
+                //$video->filters()->custom("-an");
+                $this->filters[] = '-an';
                 break;
             case 1:
                 $format->setAudioKiloBitrate(60); // test value
@@ -149,6 +158,7 @@ class ConvertVideo implements ShouldQueue
                 break;
         }
 
+        $format->setAdditionalParameters($this->filters);
         $format->setPasses(2);
         $format->setKiloBitrate($this->getBitrate());
 

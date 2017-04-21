@@ -32,6 +32,7 @@ Route::get('progress/{guid}', 'ConverterController@progress')->name('progress');
 Route::get('show/{guid}', 'ConverterController@show')->name('show');
 Route::get('view/{guid}', 'ConverterController@view')->name('view');
 Route::get('download/{guid}', 'ConverterController@download')->name('download');
+Route::get('duration', 'ConverterController@duration')->name('duration');
 
 Auth::routes();
 

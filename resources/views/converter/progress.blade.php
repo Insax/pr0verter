@@ -19,21 +19,21 @@
     $(function () {
         var interval = setInterval(get_progress, 200);
         function get_progress() {
-            var action = 'duration',
-                    method = 'POST',
-                    data = {duration: '9.3333333333333', file_name: '961aad17921c008d1a0ae24fd8315449'}
+            var action = '/duration',
+                    method = 'GET',
+                    data = {file_name: '{{$guid}}'};
             $.ajax({
                 url: action,
                 type: method,
                 data: data
             }).done(function (data) {
                 if (data === 'error') {
-                    document.location.href = '/error';
+                    document.location.href = '/';
                 } else {
                     $('#bar').width(data + '%').html(data + '%');
                     console.log(data);
                     if (data === '100') {
-                        document.location.href = '/show/961aad17921c008d1a0ae24fd8315449';
+                        document.location.href = '/show/{{$guid}}';
                     }
                     if (data === '420') {
                         // hier wird alles wieder weggemacht wenns läuft

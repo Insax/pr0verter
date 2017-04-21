@@ -2,25 +2,20 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Jobs\ConvertVideo;
 use Ixudra\Curl\Facades\Curl;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
+use App\Http\Requests\AskForDuration;
 use Illuminate\Support\Facades\Request;
 use App\Http\Requests\UploadFileToConvert;
-use FFMpeg\Format\ProgressListener\VideoProgressListener;
 
 
 
 class ConverterController extends Controller
 {
-    /**
-     * @var array
-     */
-    private $params;
-
-
     /**
      * Create a new controller instance.
      *
@@ -28,8 +23,7 @@ class ConverterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('web');
-        //$this->middleware('throttle:5,10');
+        $this->middleware('throttle:100,10');
     }
 
     /**
@@ -96,11 +90,15 @@ class ConverterController extends Controller
     public function progress($guid)
     {
         if(DB::table('data')->where('guid', $guid)->value('guid') == $guid)
-            return view('converter.progress');
+            return view('converter.progress', ['guid' => $guid]);
         else
             return view('error.404');
     }
 
+    /**
+     * @param $guid
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function show($guid)
     {
         if(DB::table('data')->where('guid', $guid)->value('guid') == $guid)
@@ -109,6 +107,10 @@ class ConverterController extends Controller
             return view('error.404');
     }
 
+    /**
+     * @param $guid
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function view($guid)
     {
         if(DB::table('data')->where('guid', $guid)->value('guid') == $guid)
@@ -121,6 +123,10 @@ class ConverterController extends Controller
             return view('error.404');
     }
 
+    /**
+     * @param $guid
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function download($guid)
     {
         if(DB::table('data')->where('guid', $guid)->value('guid') == $guid)
@@ -132,6 +138,17 @@ class ConverterController extends Controller
         }
         else
             return view('error.404');
+    }
+
+    public function duration(AskForDuration $request)
+    {
+        $guid = $request->input('file_name');
+        if(DB::table('data')->where('guid', $guid)->value('guid') == $guid)
+        {
+            return DB::table('data')->where('guid', $guid)->value('progress');
+        }
+        else
+            return 'error';
     }
 
     /**
