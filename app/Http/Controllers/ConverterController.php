@@ -28,7 +28,7 @@ class ConverterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('web');
+        $this->middleware('throttle:5,10');
     }
 
     /**
@@ -94,14 +94,44 @@ class ConverterController extends Controller
      */
     public function progress($guid)
     {
-        if(DB::table('data')->where('guid', $guid)->value('guid') == $guid) {
+        if(DB::table('data')->where('guid', $guid)->value('guid') == $guid)
             return view('converter.progress');
-        }
         else
-            return redirect()->route('welcome');
-
+            return view('error.404');
     }
 
+    public function show($guid)
+    {
+        if(DB::table('data')->where('guid', $guid)->value('guid') == $guid)
+            return view('converter.show', ['view' => url('view').'/'.$guid, 'download' => url('download').'/'.$guid]);
+        else
+            return view('error.404');
+    }
+
+    public function view($guid)
+    {
+        if(DB::table('data')->where('guid', $guid)->value('guid') == $guid)
+        {
+            echo header("Content-Type: video/mp4");
+            echo header("Content-Length: ".filesize(storage_path().'/app/public/'.$guid.'.mp4'));
+            echo readfile(storage_path().'/app/public/'.$guid.'.mp4');
+        }
+        else
+            return view('error.404');
+    }
+
+    public function download($guid)
+    {
+        if(DB::table('data')->where('guid', $guid)->value('guid') == $guid)
+        {
+            echo header("Content-Type: video/mp4");
+            echo header("Content-Length: ".filesize(storage_path().'/app/public/'.$guid.'.mp4'));
+            echo header("Content-Disposition:attachment;filename='$guid.mp4'");
+            echo readfile(storage_path().'/app/public/'.$guid.'.mp4');
+        }
+        else
+            return view('error.404');
+    }
     /**
      * Return the extension of a given remote file
      *

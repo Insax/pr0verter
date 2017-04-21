@@ -29,6 +29,9 @@ Route::get('contact', function () {
 
 Route::post('convert', 'ConverterController@upload')->name('upload');
 Route::get('progress/{guid}', 'ConverterController@progress')->name('progress');
+Route::get('show/{guid}', 'ConverterController@show')->name('show');
+Route::get('view/{guid}', 'ConverterController@view')->name('view');
+Route::get('download/{guid}', 'ConverterController@download')->name('download');
 
 Auth::routes();
 
