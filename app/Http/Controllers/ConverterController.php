@@ -24,7 +24,7 @@ class ConverterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('throttle:100,10');
+        $this->middleware('throttle:200,10');
     }
 
     /**
@@ -62,7 +62,7 @@ class ConverterController extends Controller
             $extension = '.'.Input::file('file')->getClientOriginalExtension();
             Input::file('file')->move($saveLocation, $rndName);
             $this->saveToDB($rndName, $extension);
-            dispatch(new ConvertVideo($saveLocation, $rndName, $requestSound, $requestAutoResolution, $requestLimit));
+            dispatch((new ConvertVideo($saveLocation, $rndName, $requestSound, $requestAutoResolution, $requestLimit))->onQueue('convert'));
             echo '<meta http-equiv="refresh" content="0;url=/progress/'.$rndName.'\" />';
 
         }
@@ -71,7 +71,7 @@ class ConverterController extends Controller
                 $extension = $this->getExtension($requestURL);
                 Curl::to($requestURL)->download($saveLocation.'/'.$rndName);
                 $this->saveToDB($rndName, $extension);
-                dispatch(new ConvertVideo($saveLocation, $rndName, $requestSound, $requestAutoResolution, $requestLimit));
+                dispatch((new ConvertVideo($saveLocation, $rndName, $requestSound, $requestAutoResolution, $requestLimit))->onQueue('convert'));
                 echo '<meta http-equiv="refresh" content="0;url=/progress/'.$rndName.'\" />';
 
             }

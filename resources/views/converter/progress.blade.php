@@ -17,7 +17,7 @@
 </div>
 <script type="text/javascript">
     $(function () {
-        var interval = setInterval(get_progress, 200);
+        var interval = setInterval(get_progress, 2000);
         function get_progress() {
             var action = '/duration',
                     method = 'GET',
