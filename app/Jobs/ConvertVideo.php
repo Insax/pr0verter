@@ -54,6 +54,16 @@ class ConvertVideo implements ShouldQueue
     private $limit;
 
     /**
+     * @var float
+     */
+    private $px;
+
+    /**
+     * @var float
+     */
+    private $py;
+
+    /**
      * Create a new job instance.
      *
      * @param $loc
@@ -98,29 +108,29 @@ class ConvertVideo implements ShouldQueue
         $video->filters()->custom("-t 179"); // set max video length
         $video->filters()->custom("-profile:v baseline -level 3.0"); // pr0 only supports baseline lv3, maybe 3.1, but first test with 3.0
         $video->filters()->custom("-preset fast"); // maybe change to normal
-        $video->filters()->custom("-fs " . $this->limit*8192 . "k"); // cut on limit
+        $video->filters()->custom("-fs " . $this->limit * 8192 . "k"); // cut on limit
         if (!$this->res) {
             $this->getAutoResolution();
             $video->filters()->resize(new Dimension($this->px, $this->py));
         }
         //TODO: Format Logic here!
         $format = new X264();
-        if ($this->sound === 0) {
-            $video->filters()->custom("-an"); // removes sound
-        } else {
-            $format->setAudioCodec('aac');
-            switch ($this->sound) {
-                case 1:
-                    $format->setAudioKiloBitrate(60); // test value
-                    break;
-                case 2:
-                    $format->setAudioKiloBitrate(120);
-                    break;
-                case 3:
-                    $format->setAudioKiloBitrate(190); // test value
-                    break;
-            }
+        !$this->sound ?: $format->setAudioCodec('aac');
+        switch ($this->sound) {
+            case 0:
+                $video->filters()->custom("-an"); // removes sound
+                break;
+            case 1:
+                $format->setAudioKiloBitrate(60); // test value
+                break;
+            case 2:
+                $format->setAudioKiloBitrate(120);
+                break;
+            case 3:
+                $format->setAudioKiloBitrate(190); // test value
+                break;
         }
+
         $format->setPasses(2);
         $format->setKiloBitrate($this->getBitrate());
 
@@ -143,18 +153,8 @@ class ConvertVideo implements ShouldQueue
         return $bitrate . 'k';
     }
 
-    function getAutoResolution($type)
+    function getAutoResolution()
     {
-        //unter 30 Sekunden, nix
-
-        //zwischen 30 und 60 sekunden, unter 480p nix
-        //wenn über 480p,
-        //größer 1080 -> 576p
-        //720p -> 576p
-        //
-        //zwischen 60s und 110s -> 480p
-
-        //über 110s -> 360p
         if ($this->duration > 30 && $this->duration < 60 && $this->px >= 480) {
             if ($this->px * (16 / 9) === $this->py) {
                 $this->px = 576;
@@ -183,7 +183,7 @@ class ConvertVideo implements ShouldQueue
                 }
             }
         }
-        if ($this->duration > 110 && $px > 480) {
+        if ($this->duration > 110 && $this->px > 480) {
             if ($this->px * (16 / 9) === $this->py) {
                 $this->px = 432;
                 $this->py = 768;
