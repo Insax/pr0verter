@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Input;
 use App\Http\Requests\AskForDuration;
 use Illuminate\Support\Facades\Request;
 use App\Http\Requests\UploadFileToConvert;
+use App\helpers\VideoStream;
 
 
 
@@ -116,9 +117,9 @@ class ConverterController extends Controller
     {
         if(DB::table('data')->where([['guid', '=', $guid], ['deleted', '=', 0]])->value('guid') == $guid)
         {
-            echo header("Content-Type: video/mp4");
-            echo header("Content-Length: ".filesize(storage_path().'/app/public/'.$guid.'.mp4'));
-            echo readfile(storage_path().'/app/public/'.$guid.'.mp4');
+            $video_path = storage_path().'/app/public/'.$guid.'.mp4';
+            $stream = new VideoStream($video_path);
+            $stream->start();
         }
         else
             return view('error.404');
