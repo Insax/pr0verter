@@ -17,7 +17,7 @@
                         text = 'Schlechte Qualität';
                         break;
                     case 2:
-                        text = 'Mittle Qualität';
+                        text = 'Mittlere Qualität';
                         break;
                     case 3:
                         text = 'Hohe Qualität';
@@ -35,7 +35,7 @@
                 text = 'Schlechte Qualität';
                 break;
             case 2:
-                text = 'Mittle Qualität';
+                text = 'Mittlere Qualität';
                 break;
             case 3:
                 text = 'Hohe Qualität';
