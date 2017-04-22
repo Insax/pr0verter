@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Jobs\ConvertVideo;
+use App\Facades\VideoStream;
 use Ixudra\Curl\Facades\Curl;
 use App\Http\Requests\CanDelete;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Input;
 use App\Http\Requests\AskForDuration;
 use Illuminate\Support\Facades\Request;
 use App\Http\Requests\UploadFileToConvert;
-use App\helpers\VideoStream;
+
 
 
 
@@ -73,7 +74,8 @@ class ConverterController extends Controller
             Curl::to($requestURL)->download($saveLocation.'/'.$rndName);
             $this->saveToDB($rndName, $extension);
             dispatch((new ConvertVideo($saveLocation, $rndName, $requestSound, $requestAutoResolution, $requestLimit))->onQueue('convert'));
-            echo $rndName;
+            $data = ['sucess' => true, 'guid' => $rndName];
+            echo json_encode($data);
         }
         else
             return back()->withInput();
@@ -113,9 +115,7 @@ class ConverterController extends Controller
     {
         if(DB::table('data')->where([['guid', '=', $guid], ['deleted', '=', 0]])->value('guid') == $guid)
         {
-            $video_path = storage_path().'/app/public/'.$guid.'.mp4';
-            $stream = new VideoStream($video_path);
-            $stream->start();
+            VideoStream::start(storage_path().'/app/public/'.$guid.'.mp4');
         }
         else
             return view('error.404');

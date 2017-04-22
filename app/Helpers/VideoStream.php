@@ -1,5 +1,5 @@
 <?php
-namespace App\helpers;
+namespace App\Helpers;
 /**
  *  * Description of VideoStream
  *   *
@@ -15,9 +15,8 @@ class VideoStream
     private $end    = -1;
     private $size   = 0;
 
-    function __construct($filePath)
+    function __construct()
     {
-        $this->path = $filePath;
     }
 
     /**
@@ -117,8 +116,9 @@ class VideoStream
     /**
      *      * Start streaming video content
      *           */
-    function start()
+    function start($file)
     {
+        $this->path = $file;
         $this->open();
         $this->setHeader();
         $this->stream();
