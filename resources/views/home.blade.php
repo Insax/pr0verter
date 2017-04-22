@@ -11,13 +11,8 @@
                     @if($guids)
                         @foreach($guids as $guid)
                             <a href="{{route('show', ['guid' => $guid->guid])}}" target=_blank>{{ substr(route('show', ['guid' => $guid->guid]), 0, 50)}}...</a>
-                            <a href="{{route('delete')}}?guid={{$guid->guid}}" class="btn btn-danger">Delete</a>
+                            <a href="{{route('delete')}}?guid={{$guid->guid}}" class="btn btn-danger pull-right">Delete</a>
                         @endforeach
-                    @elseif(DB::table('data')->where([['user_id', '=', Auth::id()], ['deleted', '=', 0]])->value('guid'))
-                        <a href="{{ route('show', ['guid' => $guids->guid]) }}" target=_blank>{{ substr(route('show', ['guid' => $guids->guid]), 0, 50)}}...</a>
-                        <a href="{{route('delete')}}?guid={{$guids->guid}}" class="btn btn-danger">Delete</a>
-                    @else
-                        {{$guids}}
                     @endif
                 </div>
             </div>
