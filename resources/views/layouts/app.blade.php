@@ -56,6 +56,10 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
+                        @if(Auth::id())
+                            <li><a href="{{ route('home') }}">Video Dashboard</a></li>
+                        @endif
+
                         <!-- Authentication Links -->
                         @if (Auth::guest())
                             <li><a href="{{ route('login') }}">Login</a></li>
