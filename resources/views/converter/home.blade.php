@@ -56,87 +56,84 @@
             Die Konvertierung kann je nach Videolänge bis zu einer Minute Dauern ¯\_(ツ)_/¯
         </p>
         <div class="container">
-            <div id="response"></div>
             <form action="{{ url('convert') }}" method="POST" id="upload_form" enctype="multipart/form-data">
                 {{ csrf_field() }}
                 <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-12">
                         <div class="panel panel-default">
-                            <div class="panel-heading">Fileupload:</div>
-                            <div class="panel-body">
-                                <div class="form-group{{ $errors->has('file') ? ' has-error' : '' }}">
-                                    <label class="btn btn-default btn-file">
-                                        Video Auswählen <input type="file" class="form-control" value="{{ old('file') }}" name="file" id="file" style="display: none;" />
-                                    </label>
-                                    @if ($errors->has('file'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('file') }}</strong>
-                                    </span>
-                                    @endif
+                            <div class="panel-heading">
+                                <div class="container-fluid panel-container">
+                                    <h3 class="panel-title col-md-5">Fileupload:</h3>
+                                    <h3 class="panel-title col-md-2">ODER</h3>
+                                    <h3 class="panel-title col-md-5">URL</h3>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        ODER
-                    </div>
-                    <div class="col-md-5">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">URL:</div>
                             <div class="panel-body">
-                                <div id="urlerror" class="form-group{{ $errors->has('url') ? ' has-error' : '' }}">
-                                    <input type="text" class="form-control" size=30 name="url" id="url" value="{{ old('url') }}"/>
+                                <div class="col-md-5">
+                                    <div class="form-group{{ $errors->has('file') ? ' has-error' : '' }}">
+                                        <label class="btn btn-default btn-file">
+                                            Video Auswählen <input type="file" class="form-control" value="{{ old('file') }}" name="file" id="file" style="display: none;" />
+                                        </label>
+                                        @if ($errors->has('file'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->first('file') }}</strong>
+                                        </span>
+                                        @endif
+                                    </div>
                                 </div>
-                                <span id="urlerrhelp" class="help-block" style="display: none;">
+                                <div class="col-md-5 col-md-offset-2">
+                                    <div id="urlerror" class="form-group{{ $errors->has('url') ? ' has-error' : '' }}">
+                                        <input type="text" class="form-control" size=30 name="url" id="url" value="{{ old('url') }}"/>
+                                    </div>
+                                    <span id="urlerrhelp" class="help-block" style="display: none;">
                                         <!-- <strong>{{ $errors->first('url') }}</strong> -->
-                                </span>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="panel panel-default">
-                            <div class="panel-heading">Größe des Videos am Ende:</div>
-                            <div class="panel-body">
-                                <div class="form-group input-group row-group col-xs-4 col-xs-offset-4 {{ $errors->has('limit') ? ' has-error' : '' }}">
-                                    <div class="input-group-addon">1 - 30</div>
-                                    <input type="number" id="limit" name="limit" min="1" max="30" value="{{ $errors->has('limit') ? old('url') : '6'}}" class="form-control"/>
-                                    <div class="input-group-addon">MB</div>
+                            <div class="panel-heading">
+                                <div class="container-fluid panel-container">
+                                    <h3 class="panel-title col-md-5">Größe des Videos am Ende:</h3>
+                                    <h3 class="panel-title col-md-5 col-md-offset-2">Zusatzinfos:</h3>
                                 </div>
-                                @if ($errors->has('limit'))
-                                    <span class="help-block">
-                                            <strong>{{ $errors->first('limit') }}</strong>
-                                    </span>
-                                @endif
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">Zusatzinfos:</div>
                             <div class="panel-body">
-                                <div class="form-group>
-                                        <label for="sound">Ton:</label>
+                                <div class="col-md-5">
+                                    <div style="margin-top: 15px;" class="form-group input-group row-group {{ $errors->has('limit') ? ' has-error' : '' }}">
+                                        <div class="input-group-addon">1 - 30</div>
+                                        <input type="number" id="limit" name="limit" min="1" max="30" value="{{ $errors->has('limit') ? old('url') : '6'}}" class="form-control"/>
+                                        <div class="input-group-addon">MB</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 col-md-offset-2">
+                                    <div class="form-group">
+                                        <label for="sound">
+                                            Ton:
+                                        </label>
                                         <input type="text" id="sound" value="{{ old('sound') }}" readonly style="background-color: #161618; border: 0px;">
                                         <input type="hidden" id="refsound" name="sound" value="{{ old('sound') }}">
-                                    <div id="slider" class="col-xs-6 col-xs-offset-3"></div>
-                                    <br/>
-                                    <br/>
-                                    <div class="checkbox row">
-                                        <label>
-                                            <input name="autoResolution" type="checkbox" {{ old('autoResolution') ? 'checked' : '' }}> Auflösung beibehalten
-                                        </label>
+                                        <div id="slider">
+
+                                        </div>
+                                        <div class="checkbox row">
+                                            <label>
+                                                <input name="autoResolution" type="checkbox" {{ old('autoResolution') ? 'checked' : '' }}> Auflösung beibehalten
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <input class="btn btn-danger" type="submit" value="Konvertieren">
-                        </div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <input class="btn btn-danger" type="submit" value="Konvertieren">
                     </div>
                 </div>
             </form>

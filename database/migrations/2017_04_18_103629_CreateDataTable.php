@@ -14,7 +14,7 @@ class CreateDataTable extends Migration
     public function up()
     {
         Schema::create('data', function (Blueprint $table) {
-            $table->longText('guid');
+            $table->longText('guid')->unique();
             $table->integer('user_id')->unsigned();
             $table->ipAddress('uploader_ip');
             $table->text('origEnding');

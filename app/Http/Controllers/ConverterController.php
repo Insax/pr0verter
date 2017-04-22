@@ -45,6 +45,14 @@ class ConverterController extends Controller
         $requestURL               = $request->input('url');
         $requestFile              = $request->file('file');
 
+        while(1) {
+            if(DB::table('data')->where('guid', '=', $rndName)->value('guid')) {
+                $rndName = str_random(64);
+            }
+            else
+                break;
+        }
+
         if($requestLimit > 30)
             $requestLimit = 30;
         if($requestLimit < 1)
@@ -129,9 +137,14 @@ class ConverterController extends Controller
     {
         if(DB::table('data')->where([['guid', '=', $guid], ['deleted', '=', 0]])->value('guid') == $guid)
         {
+            echo header('Content-Description: File Transfer');
             echo header("Content-Type: video/mp4");
-            echo header("Content-Length: ".filesize(storage_path().'/app/public/'.$guid.'.mp4'));
-            echo header("Content-Disposition:attachment;filename='$guid.mp4'");
+            echo header('Content-Disposition: attachment; filename='.basename(storage_path().'/app/public/'.$guid.'.mp4'));
+            echo header('Content-Transfer-Encoding: binary');
+            echo header('Expires: 0');
+            echo header('Cache-Control: must-revalidate');
+            echo header('Pragma: public');
+            echo header('Content-Length: ' . filesize(storage_path().'/app/public/'.$guid.'.mp4'));
             echo readfile(storage_path().'/app/public/'.$guid.'.mp4');
         }
         else
@@ -160,8 +173,7 @@ class ConverterController extends Controller
     public function delete(CanDelete $request)
     {
         $guid = $request->input('guid');
-        if(DB::table('data')->where('guid', '=', $guid)->value('user_id') == Auth::id() || DB::table('users')->where('id', '=', Auth::id())->value('flag') == 1)
-        if(DB::table('data')->where([['guid', '=', $guid], ['deleted', '=', 0]])->value('guid') == $guid)
+        if(DB::table('data')->where([['guid', '=', $guid], ['deleted', '=', 0]])->value('guid') == $guid && (DB::table('data')->where('guid', '=', $guid)->value('user_id') == Auth::id() || DB::table('users')->where('id', '=', Auth::id())->value('flag') == 1))
         {
             DB::table('data')->where('guid', '=', $guid)->update(['deleted' => 1]);
             return redirect()->back();

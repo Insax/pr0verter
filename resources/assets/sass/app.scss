@@ -102,3 +102,9 @@ $panel-default-heading-bg: #161618;
   background-color: #161618;
   font-size: 2em;
 }
+
+.panel-container {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  height: 20px;
+}
