@@ -4,6 +4,8 @@ $(function () {
 
 
     $('#upload_form').ajaxForm({
+        cache: false,
+        dataType: 'json',
         beforeSend: function () {
             status.empty();
             var file = $('#file').val();
@@ -34,8 +36,21 @@ $(function () {
             bar.width(percentVal);
             bar.html(percentVal);
         },
-        complete: function (xhr) {
-            status.html(xhr.responseText);
+        success: function(data)
+        {
+            var obj = data;
+            if(obj.sucess === true)
+                document.location.href = '/progress/' + obj.guid;
+        },
+        error: function(data)
+        {
+            $('#full').fadeOut();
+            $.each(data, function(index, element) {
+                if(typeof (element.url) !== 'undefined') {
+                    $('#urlerror').attr('class', 'has-error');
+                    $('#urlerrhelp').show().attr('class', 'help-block').html('<strong>' + element.url + '</strong>')
+                }
+            });
         }
     });
 });

@@ -64,20 +64,16 @@ class ConverterController extends Controller
             Input::file('file')->move($saveLocation, $rndName);
             $this->saveToDB($rndName, $extension);
             dispatch((new ConvertVideo($saveLocation, $rndName, $requestSound, $requestAutoResolution, $requestLimit))->onQueue('convert'));
-            echo '<meta http-equiv="refresh" content="0;url=/progress/'.$rndName.'/" />';
+            $data = ['sucess' => true, 'guid' => $rndName];
+            echo json_encode($data);
 
         }
         elseif ($requestURL) {
-            if($this->validateRemoteFile($requestURL)) {
-                $extension = $this->getExtension($requestURL);
-                Curl::to($requestURL)->download($saveLocation.'/'.$rndName);
-                $this->saveToDB($rndName, $extension);
-                dispatch((new ConvertVideo($saveLocation, $rndName, $requestSound, $requestAutoResolution, $requestLimit))->onQueue('convert'));
-                echo '<meta http-equiv="refresh" content="0;url=/progress/'.$rndName.'/" />';
-
-            }
-            else
-                return back()->withInput();
+            $extension = $this->getExtension($requestURL);
+            Curl::to($requestURL)->download($saveLocation.'/'.$rndName);
+            $this->saveToDB($rndName, $extension);
+            dispatch((new ConvertVideo($saveLocation, $rndName, $requestSound, $requestAutoResolution, $requestLimit))->onQueue('convert'));
+            echo $rndName;
         }
         else
             return back()->withInput();
@@ -184,47 +180,6 @@ class ConverterController extends Controller
         $name = explode(".", $url);
         $elementCount = count($name);
         return '.'.$name[$elementCount - 1];
-    }
-
-    /**
-     * Validate the remote file given by url.
-     *
-     * @param $url
-     * @return bool
-     */
-    private function validateRemoteFile($url)
-    {
-        $curl = curl_init($url);
-        curl_setopt( $curl, CURLOPT_NOBODY, true );
-        curl_setopt( $curl, CURLOPT_HEADER, true );
-        curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
-        curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, true );
-        $data = curl_exec($curl);
-
-        $response = curl_getinfo($curl, CURLINFO_CONTENT_TYPE);
-        curl_close($curl);
-
-        if($data) {
-            $content_length = "unknown";
-            $status = "unknown";
-            $result = 0;
-
-            if(preg_match("/^HTTP\/1\.[01] (\d\d\d)/", $data, $matches))
-                $status = (int)$matches[1];
-
-            if(preg_match("/Content-Length: (\d+)/", $data, $matches))
-                $content_length = (int)$matches[1];
-
-            // http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-            if($status == 200 || ($status > 300 && $status <= 308))
-                $result = $content_length;
-
-            if(preg_match( '/^video.*/', $response) && $result < 104857600)
-                return true;
-            else
-                return false;
-        }
-        return false;
     }
 
     /**

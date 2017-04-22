@@ -56,6 +56,7 @@
             Die Konvertierung kann je nach Videolänge bis zu einer Minute Dauern ¯\_(ツ)_/¯
         </p>
         <div class="container">
+            <div id="response"></div>
             <form action="{{ url('convert') }}" method="POST" id="upload_form" enctype="multipart/form-data">
                 {{ csrf_field() }}
                 <div class="row">
@@ -83,14 +84,12 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">URL:</div>
                             <div class="panel-body">
-                                <div class="form-group{{ $errors->has('url') ? ' has-error' : '' }}">
+                                <div id="urlerror" class="form-group{{ $errors->has('url') ? ' has-error' : '' }}">
                                     <input type="text" class="form-control" size=30 name="url" id="url" value="{{ old('url') }}"/>
                                 </div>
-                                @if ($errors->has('url'))
-                                    <span class="help-block">
-                                            <strong>{{ $errors->first('url') }}</strong>
-                                    </span>
-                                @endif
+                                <span id="urlerrhelp" class="help-block" style="display: none;">
+                                        <!-- <strong>{{ $errors->first('url') }}</strong> -->
+                                </span>
                             </div>
                         </div>
                     </div>
