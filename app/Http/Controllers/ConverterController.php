@@ -137,15 +137,7 @@ class ConverterController extends Controller
     {
         if(DB::table('data')->where([['guid', '=', $guid], ['deleted', '=', 0]])->value('guid') == $guid)
         {
-            echo header('Content-Description: File Transfer');
-            echo header("Content-Type: video/mp4");
-            echo header('Content-Disposition: attachment; filename='.basename(storage_path().'/app/public/'.$guid.'.mp4'));
-            echo header('Content-Transfer-Encoding: binary');
-            echo header('Expires: 0');
-            echo header('Cache-Control: must-revalidate');
-            echo header('Pragma: public');
-            echo header('Content-Length: ' . filesize(storage_path().'/app/public/'.$guid.'.mp4'));
-            echo readfile(storage_path().'/app/public/'.$guid.'.mp4');
+            return response()->download(storage_path().'/app/public/'.$guid.'.mp4');
         }
         else
             return view('error.404');
