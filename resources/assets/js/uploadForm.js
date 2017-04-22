@@ -60,7 +60,7 @@ function is_supported(path) {
     if (path.includes('.')) {
         var url_array = path.split('.');
         var format = url_array[url_array.length - 1];
-        var supported_formats = ["webm", "mp4", "mkv", "mov", "avi", "wmv", "flv", "3gp", "gif", "gifv"];
+        var supported_formats = ["webm", "mp4", "mkv", "mov", "avi", "wmv", "flv", "3gp"];
         var supported = (supported_formats.indexOf(format.toLowerCase()) > -1);
         return supported;
     }
