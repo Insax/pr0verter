@@ -83,7 +83,7 @@ class UploadFileToConvert extends FormRequest
             if($status == 200 || ($status > 300 && $status <= 308))
                 $result = $content_length;
 
-            if(preg_match( '/^video.*/', $response) && $result < 104857600)
+            if(($response === 'image/gif' || preg_match( '/^video.*/', $response)) && $result < 104857600)
                 return true;
             else
                 return false;
