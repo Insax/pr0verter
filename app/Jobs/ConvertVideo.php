@@ -144,7 +144,6 @@ class ConvertVideo implements ShouldQueue
         $format->setAudioCodec('aac');
         switch ($this->sound) {
             case 0:
-                //$video->filters()->custom("-an");
                 $this->filters[] = '-an';
                 break;
             case 1:
@@ -160,7 +159,7 @@ class ConvertVideo implements ShouldQueue
 
         $format->setAdditionalParameters($this->filters);
         $format->setPasses(2);
-        $format->setKiloBitrate($this->getBitrate());
+        $format->setKiloBitrate($this->getBitrate($format->getAudioKiloBitrate()));
 
         $format->on('progress', function ($video, $format, $percentage) {
             DB::table('data')->where('guid', $this->name)->update(['progress' => $percentage]);
@@ -171,13 +170,13 @@ class ConvertVideo implements ShouldQueue
         }
     }
 
-    private function getBitrate()
+    private function getBitrate($audioBitrate)
     {
         $this->duration = min($this->duration, $this->maxDuration);
 
         $bitrate = ($this->limit * 8192) / (float) $this->duration;
 
-        !$this->sound ? : $bitrate -= $this->sound;
+        !$this->sound ? : $bitrate -= $audioBitrate;
         return $bitrate;
     }
 
