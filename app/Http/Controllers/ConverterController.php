@@ -100,7 +100,7 @@ class ConverterController extends Controller
      */
     public function show($guid)
     {
-        if(DB::table('data')->where(['guid', '=', $guid])->value('guid') == $guid)
+        if(DB::table('data')->where('guid', '=', $guid)->value('guid') == $guid)
             return view('converter.show', ['view' => route('view', ['guid' => $guid]), 'download' => route('download', ['guid' => $guid])]);
         else
             return view('error.404');
