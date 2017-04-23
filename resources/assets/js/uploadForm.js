@@ -40,7 +40,7 @@ $(function () {
         {
             var obj = data;
             if(obj.sucess === true)
-                document.location.href = '/progress/' + obj.guid;
+                document.location.href = '/converter/progress/' + obj.guid;
         },
         error: function(data)
         {

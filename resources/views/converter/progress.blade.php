@@ -19,7 +19,7 @@
     $(function () {
         var interval = setInterval(get_progress, 2000);
         function get_progress() {
-            var action = '/duration',
+            var action = '/converter/duration',
                     method = 'GET',
                     data = {file_name: '{{$guid}}'};
             $.ajax({
@@ -32,7 +32,7 @@
                 } else {
                     $('#bar').width(data + '%').html(data + '%');
                     if (data === '100') {
-                        document.location.href = '/show/{{$guid}}';
+                        document.location.href = '/coverter/show/{{$guid}}';
                     }
                 }
             });

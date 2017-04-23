@@ -11,32 +11,44 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
+/**
+ * Static routes.
+ */
+Route::group(['prefix' => '/', 'middleware' => 'web'], function () {
+    Route::get('', 'StaticsController@index')->name('index');
+    Route::get('converter', 'StaticsController@converter')->name('converter');
+    Route::get('faq', 'StaticsController@faq')->name('faq');
+    Route::get('contact', 'StaticsController@contact')->name('contact');
+});
 
-Route::get('converter', function () {
-    return view('converter/home');
-})->name('converter');
+/**
+ * Dynamic content
+ */
 
-Route::get('faq', function () {
-    return view('faq/home');
-})->name('faq');
-
-Route::get('contact', function () {
-    return view('contact/home');
-})->name('contact');
-
-Route::post('convert', 'ConverterController@upload')->name('upload');
-Route::get('progress/{guid}', 'ConverterController@progress')->name('progress');
-Route::get('show/{guid}', 'ConverterController@show')->name('show');
-Route::get('view/{guid}', 'ConverterController@view')->name('view');
-Route::get('download/{guid}', 'ConverterController@download')->name('download');
-Route::get('duration', 'ConverterController@duration')->name('duration');
-Route::get('delete', 'ConverterController@delete')->name('delete');
 Route::get('changelog', 'ChangelogController@index')->name('changelog');
-Route::get('test', 'ConverterController@test')->name('test');
 
-Auth::routes();
+/**
+ * Routes used for converting
+ */
+Route::group(['prefix' => 'converter', 'middleware' => 'web'], function () {
+    Route::get('progress/{guid}', 'ConverterController@progress')->name('progress');
+    Route::get('show/{guid}', 'ConverterController@show')->name('show');
+    Route::get('duration', 'ConverterController@duration')->name('duration');
+    Route::post('convert', 'ConverterController@convert')->name('convert');
+});
 
-Route::get('/home', 'HomeController@index')->name('home');
+
+/**
+ * Routes for file handling
+ */
+Route::group(['prefix' => 'file/', 'middleware' => 'throttle:200,10'], function () {
+    Route::get('view/{guid}', 'ConverterController@view')->name('view');
+    Route::get('download/{guid}', 'ConverterController@download')->name('download');
+});
+
+/**
+ * Admin routes
+ */
+Route::group(['prefix' => 'admin/'], function () {
+    Route::get('login', 'AdminController@login')->name('login');
+});

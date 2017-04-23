@@ -56,7 +56,7 @@
             Die Konvertierung kann je nach Videolänge bis zu einer Minute Dauern ¯\_(ツ)_/¯
         </p>
         <div class="container">
-            <form action="{{ url('convert') }}" method="POST" id="upload_form" enctype="multipart/form-data">
+            <form action="{{ route('convert') }}" method="POST" id="upload_form" enctype="multipart/form-data">
                 {{ csrf_field() }}
                 <div class="row">
                     <div class="col-md-12">

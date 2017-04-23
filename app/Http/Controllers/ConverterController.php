@@ -21,22 +21,12 @@ use Illuminate\Support\Facades\File;
 class ConverterController extends Controller
 {
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('throttle:200,10');
-    }
-
-    /**
      * Upload Handling Method - Redirects to Front or Progress Page
      *
      * @param UploadFileToConvert $request
      * @return $this|string
      */
-    public function upload(UploadFileToConvert $request)
+    public function convert(UploadFileToConvert $request)
     {
         $saveLocation             = storage_path().'/app';
         $rndName                  = str_random(64);
@@ -111,7 +101,7 @@ class ConverterController extends Controller
     public function show($guid)
     {
         if(DB::table('data')->where([['guid', '=', $guid], ['deleted', '=', 0]])->value('guid') == $guid)
-            return view('converter.show', ['view' => url('view').'/'.$guid, 'download' => url('download').'/'.$guid]);
+            return view('converter.show', ['view' => route('view', ['guid' => $guid]), 'download' => route('download', ['guid' => $guid])]);
         else
             return view('error.404');
     }
@@ -128,11 +118,6 @@ class ConverterController extends Controller
         }
         else
             return view('error.404');
-    }
-
-    public function test()
-    {
-        $url = 'http://vid.pr0gramm.com/2017/04/23/0f0bbcb2642483a4.mp4';
     }
 
     /**
@@ -202,11 +187,8 @@ class ConverterController extends Controller
      */
     private function saveToDB($name, $ext)
     {
-        Auth::guest() ? $userID = 0 : $userID = Auth::id();
         DB::table('data')->insert([[
             'guid' => $name,
-            'user_id' => $userID,
-            'uploader_ip' => Request::ip(),
             'origEnding' => $ext,
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")

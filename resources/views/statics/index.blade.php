@@ -10,10 +10,10 @@
         </div>
 
         <div class="links">
-            <a href="{{ url('converter') }}">mp4 Converter</a>
-            <a href="{{ url('faq') }}">FAQ</a>
-            <a href="{{ url('contact') }}">Kontakt</a>
-            <a href="{{ url('changelog') }}">Changelog</a>
+            <a href="{{ route('converter') }}">mp4 Converter</a>
+            <a href="{{ route('faq') }}">FAQ</a>
+            <a href="{{ route('contact') }}">Kontakt</a>
+            <a href="{{ route('changelog') }}">Changelog</a>
         </div>
     </div>
 @endsection
