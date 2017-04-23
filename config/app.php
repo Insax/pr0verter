@@ -178,6 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Ixudra\Curl\CurlServiceProvider::class,
         App\Providers\VideoStreamServiceProvider::class,
+        GrahamCampbell\GitHub\GitHubServiceProvider::class,
 
     ],
 
@@ -229,6 +230,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Curl' => Ixudra\Curl\Facades\Curl::class,
         'VideoStream' => App\Facades\VideoStream::class,
+        'GitHub' => GrahamCampbell\GitHub\Facades\GitHub::class,
     ],
 
 ];
