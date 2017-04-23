@@ -15,21 +15,19 @@ matrix:
     - php: hhvm
   include:
     - php: 7.1
-      env: COMPOSER_FLAGS="--prefer-lowest"
 
 before_install:
   - sudo add-apt-repository ppa:mc3man/trusty-media -y
   - sudo apt-get update -q
   - composer self-update
   - mysql -e 'CREATE DATABASE pr0verter;'
-  - if [ "$COMPOSER_FLAGS" == "--prefer-lowest" ]; then composer require "roave/security-advisories" dev-master --no-update; fi;
 
 services:
   - mysql
 
 install:
   - sudo apt-get install -y ffmpeg
-  - composer update --prefer-source $COMPOSER_FLAGS
+  - composer update
   - cp .env.example .env
   - php artisan key:generate
   - php artisan migrate
