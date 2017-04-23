@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 class StaticsController extends Controller
 {
     public function index() {
-        return view('welcome');
+        return view('statics.index');
     }
 
     public function converter() {
@@ -15,10 +15,10 @@ class StaticsController extends Controller
     }
 
     public function faq() {
-        return view('faq.home');
+        return view('statics.faq');
     }
 
     public function contact() {
-        return view('contact.home');
+        return view('statics.contact');
     }
 }
