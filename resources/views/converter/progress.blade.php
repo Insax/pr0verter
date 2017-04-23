@@ -31,15 +31,8 @@
                     document.location.href = '/';
                 } else {
                     $('#bar').width(data + '%').html(data + '%');
-                    console.log(data);
                     if (data === '100') {
                         document.location.href = '/show/{{$guid}}';
-                    }
-                    if (data === '420') {
-                        // hier wird alles wieder weggemacht wenns läuft
-                        alert('Fehler beim konvertieren, ich arbeite gerade am fehler, versuchs mal im anderen format(z.b webm)');
-                        clearInterval(interval);
-                        document.location.href = '/';
                     }
                 }
             });
