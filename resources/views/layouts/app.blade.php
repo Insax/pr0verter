@@ -52,6 +52,7 @@
                         <li><a href="{{ url('converter') }}">mp4 Converter</a></li>
                         <li><a href="{{ url('faq') }}">FAQ</a></li>
                         <li><a href="{{ url('contact') }}">Kontakt</a></li>
+                        <li><a href="{{ url('changelog') }}">Changelog</a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

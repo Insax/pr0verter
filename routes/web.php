@@ -34,6 +34,7 @@ Route::get('view/{guid}', 'ConverterController@view')->name('view');
 Route::get('download/{guid}', 'ConverterController@download')->name('download');
 Route::get('duration', 'ConverterController@duration')->name('duration');
 Route::get('delete', 'ConverterController@delete')->name('delete');
+Route::get('changelog', 'ChangelogController@index')->name('changelog');
 
 Auth::routes();
 
