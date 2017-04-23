@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Translation\Translator;
+use Ixudra\Curl\Facades\Curl;
 
 class UploadFileToConvert extends FormRequest
 {
@@ -58,35 +59,35 @@ class UploadFileToConvert extends FormRequest
      */
     private function validateRemoteFile($url)
     {
-        $curl = curl_init($url);
-        curl_setopt( $curl, CURLOPT_NOBODY, true );
-        curl_setopt( $curl, CURLOPT_HEADER, true );
-        curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
-        curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, true );
-        $data = curl_exec($curl);
-
-        $response = curl_getinfo($curl, CURLINFO_CONTENT_TYPE);
-        curl_close($curl);
+        $data = Curl::to($url)->allowRedirect()->withOption('NOBODY', true)->withOption('HEADER', true)->get();
 
         if($data) {
-            $content_length = "unknown";
-            $status = "unknown";
-            $result = 0;
-
-            if(preg_match("/^HTTP\/1\.[01] (\d\d\d)/", $data, $matches))
+            if(preg_match('/^HTTP\/1\.[01] (\d\d\d)/', $data, $matches))
                 $status = (int)$matches[1];
 
-            if(preg_match("/Content-Length: (\d+)/", $data, $matches))
-                $content_length = (int)$matches[1];
+            if(preg_match('/Content-Length: (\d+)/', $data, $matches))
+                $contentLength = (int)$matches[1];
 
-            // http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-            if($status == 200 || ($status > 300 && $status <= 308))
-                $result = $content_length;
+            if(preg_match('/Content-Type: (\w+\/\w+)/', $data, $matches))
+                $contentType = $matches[1];
 
-            if(($response === 'image/gif' || preg_match( '/^video.*/', $response)) && $result < 104857600)
-                return true;
+            if(isset($status))
+                if($status == 200 || ($status > 300 && $status <= 308))
+                    if(isset($contentLength))
+                        $contentSize = $contentLength;
+                    else
+                        return false;
+                else
+                    return false;
             else
                 return false;
+
+            if(isset($contentType))
+                if(($contentType === 'image/gif' || (preg_match( '/^video\/.*/', $contentType))) && $contentSize < 104857600)
+                    return true;
+                else
+                    return false;
+            return false;
         }
         return false;
     }

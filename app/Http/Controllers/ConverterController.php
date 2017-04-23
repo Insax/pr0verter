@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Input;
 use App\Http\Requests\AskForDuration;
 use Illuminate\Support\Facades\Request;
 use App\Http\Requests\UploadFileToConvert;
+use Illuminate\Support\Facades\File;
 
 
 
@@ -127,6 +128,11 @@ class ConverterController extends Controller
         }
         else
             return view('error.404');
+    }
+
+    public function test()
+    {
+        $url = 'http://vid.pr0gramm.com/2017/04/23/0f0bbcb2642483a4.mp4';
     }
 
     /**
