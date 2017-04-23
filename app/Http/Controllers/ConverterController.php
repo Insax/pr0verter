@@ -88,7 +88,7 @@ class ConverterController extends Controller
      */
     public function progress($guid)
     {
-        if(DB::table('data')->where([['guid', '=', $guid], ['deleted', '=', 0]])->value('guid') == $guid)
+        if(DB::table('data')->where('guid', '=', $guid)->value('guid') == $guid)
             return view('converter.progress', ['guid' => $guid]);
         else
             return view('error.404');
@@ -100,7 +100,7 @@ class ConverterController extends Controller
      */
     public function show($guid)
     {
-        if(DB::table('data')->where([['guid', '=', $guid], ['deleted', '=', 0]])->value('guid') == $guid)
+        if(DB::table('data')->where(['guid', '=', $guid])->value('guid') == $guid)
             return view('converter.show', ['view' => route('view', ['guid' => $guid]), 'download' => route('download', ['guid' => $guid])]);
         else
             return view('error.404');
@@ -112,7 +112,7 @@ class ConverterController extends Controller
      */
     public function view($guid)
     {
-        if(DB::table('data')->where([['guid', '=', $guid], ['deleted', '=', 0]])->value('guid') == $guid)
+        if(DB::table('data')->where('guid', '=', $guid)->value('guid') == $guid)
         {
             VideoStream::start(storage_path().'/app/public/'.$guid.'.mp4');
         }
@@ -126,7 +126,7 @@ class ConverterController extends Controller
      */
     public function download($guid)
     {
-        if(DB::table('data')->where([['guid', '=', $guid], ['deleted', '=', 0]])->value('guid') == $guid)
+        if(DB::table('data')->where('guid', '=', $guid)->value('guid') == $guid)
         {
             return response()->download(storage_path().'/app/public/'.$guid.'.mp4');
         }
@@ -141,28 +141,12 @@ class ConverterController extends Controller
     public function duration(AskForDuration $request)
     {
         $guid = $request->input('file_name');
-        if(DB::table('data')->where([['guid', '=', $guid], ['deleted', '=', 0]])->value('guid') == $guid)
+        if(DB::table('data')->where('guid', '=', $guid)->value('guid') == $guid)
         {
             return DB::table('data')->where('guid', $guid)->value('progress');
         }
         else
             return 'error';
-    }
-
-    /**
-     * @param AskForDuration $request
-     * @return string
-     */
-    public function delete(CanDelete $request)
-    {
-        $guid = $request->input('guid');
-        if(DB::table('data')->where([['guid', '=', $guid], ['deleted', '=', 0]])->value('guid') == $guid && (DB::table('data')->where('guid', '=', $guid)->value('user_id') == Auth::id() || DB::table('users')->where('id', '=', Auth::id())->value('flag') == 1))
-        {
-            DB::table('data')->where('guid', '=', $guid)->update(['deleted' => 1]);
-            return redirect()->back();
-        }
-        else
-            return redirect()->back();
     }
 
     /**

@@ -32,7 +32,7 @@
                 } else {
                     $('#bar').width(data + '%').html(data + '%');
                     if (data === '100') {
-                        document.location.href = '/coverter/show/{{$guid}}';
+                        document.location.href = '/converter/show/{{$guid}}';
                     }
                 }
             });
