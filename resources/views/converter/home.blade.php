@@ -1,156 +1,141 @@
 @extends('layouts.app')
 @section('content')
-<script>
-    $( function() {
-        var text = 'Kein Ton';
-        $( "#slider" ).slider({
-            value: {{ old('sound') ? old('sound') : 2 }},
-            min: 0,
-            max: 3,
-            step: 1,
-            slide: function( event, ui ) {
-                switch(ui.value) {
-                    case 0:
-                        text = 'Kein Ton';
-                        break;
-                    case 1:
-                        text = 'Schlechte Qualität';
-                        break;
-                    case 2:
-                        text = 'Mittlere Qualität';
-                        break;
-                    case 3:
-                        text = 'Hohe Qualität';
-                        break;
-                }
-                $( "#sound" ).val( text );
-                $( "#refsound" ).val(ui.value);
-            }
-        });
-        switch($( "#slider" ).slider( "value" )) {
-            case 0:
-                text = 'Kein Ton';
-                break;
-            case 1:
-                text = 'Schlechte Qualität';
-                break;
-            case 2:
-                text = 'Mittlere Qualität';
-                break;
-            case 3:
-                text = 'Hohe Qualität';
-                break;
-        }
-        $( "#sound" ).val( text );
-        $( "#refsound" ).val( $( "#slider" ).slider( "value" ) );
-    } );
-</script>
     <div class="content">
         <div class="title m-b-md">
             mp4 Converter
         </div>
-
-        <p>
-            Wandelt Videos ins mp4 Format um.
-            Maximale Videogröße 100MB. Maximale Länge 180 Sekunden. <br>
-            Die Konvertierung kann je nach Videolänge bis zu einer Minute Dauern ¯\_(ツ)_/¯
-        </p>
-        <div class="container">
-            <form action="{{ route('convert') }}" method="POST" id="upload_form" enctype="multipart/form-data">
-                {{ csrf_field() }}
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <div class="container-fluid panel-container">
-                                    <h3 class="panel-title col-md-5">Fileupload:</h3>
-                                    <h3 class="panel-title col-md-2">ODER</h3>
-                                    <h3 class="panel-title col-md-5">URL</h3>
-                                </div>
-                            </div>
-                            <div class="panel-body">
-                                <div class="col-md-5">
-                                    <div class="form-group{{ $errors->has('file') ? ' has-error' : '' }}">
-                                        <label class="btn btn-default btn-file">
-                                            Video Auswählen <input type="file" class="form-control" value="{{ old('file') }}" name="file" id="file" style="display: none;" />
-                                        </label>
-                                        @if ($errors->has('file'))
-                                            <span class="help-block">
-                                                <strong>{{ $errors->first('file') }}</strong>
-                                        </span>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="col-md-5 col-md-offset-2">
-                                    <div id="urlerror" class="form-group{{ $errors->has('url') ? ' has-error' : '' }}">
-                                        <input type="text" class="form-control" size=30 name="url" id="url" value="{{ old('url') }}"/>
-                                    </div>
-                                    <span id="urlerrhelp" class="help-block" style="display: none;">
-                                        <!-- <strong>{{ $errors->first('url') }}</strong> -->
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    </div>
+        <div class="container-steps slider-start-active">
+            <div class="steps">
+                <div class="step step-start">
+                    <div class="liner"></div>
+                    <span>Willkommen!</span>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <div class="container-fluid panel-container">
-                                    <h3 class="panel-title col-md-5">Größe des Videos am Ende:</h3>
-                                    <h3 class="panel-title col-md-5 col-md-offset-2">Zusatzinfos:</h3>
-                                </div>
-                            </div>
-                            <div class="panel-body">
-                                <div class="col-md-5">
-                                    <div style="margin-top: 15px;" class="form-group input-group row-group {{ $errors->has('limit') ? ' has-error' : '' }}">
-                                        <div class="input-group-addon">1 - 30</div>
-                                        <input type="number" id="limit" name="limit" min="1" max="30" value="{{ $errors->has('limit') ? old('url') : '6'}}" class="form-control"/>
-                                        <div class="input-group-addon">MB</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-5 col-md-offset-2">
-                                    <div class="form-group">
-                                        <label for="sound">
-                                            Ton:
-                                        </label>
-                                        <input type="text" id="sound" value="{{ old('sound') }}" readonly style="background-color: #161618; border: 0px;">
-                                        <input type="hidden" id="refsound" name="sound" value="{{ old('sound') }}">
-                                        <div id="slider">
-
-                                        </div>
-                                        <div class="checkbox row">
-                                            <label>
-                                                <input name="autoResolution" type="checkbox" {{ old('autoResolution') ? 'checked' : '' }}> Auflösung beibehalten
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="step step-ul">
+                    <div class="liner"></div>
+                    <span>Upload Methode</span>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <input class="btn btn-danger" type="submit" value="Konvertieren">
-                    </div>
+                <div class="step step-choose">
+                    <div class="liner"></div>
+                    <span>Auswahl</span>
                 </div>
-            </form>
-        </div>
-        <div class="container-fluid" id="full">
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3 text-center" id="progress">
-                    <h2>lade hoch ...</h2>
-                    <br>
-                    <div class="progress">
-                        <div id="upload_bar" class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0;">
-                            0%
-                        </div>
-                    </div>
+                <div class="step step-size">
+                    <div class="liner"></div>
+                    <span>Videogröße</span>
+                </div>
+                <div class="step step-sound">
+                    <div class="liner"></div>
+                    <span>Ton</span>
+                </div>
+                <div class="step step-res">
+                    <div class="liner"></div>
+                    <span>Auflösung</span>
+                </div>
+                <div class="step step-clip">
+                    <div class="liner"></div>
+                    <span>Schneiden</span>
                 </div>
             </div>
-        </div>
+            <div class="line">
+                <div class="dot-move"></div>
+                <div class="dot start"></div>
+                <div class="dot ul"></div>
+                <div class="dot choose"></div>
+                <div class="dot size"></div>
+                <div class="dot sound"></div>
+                <div class="dot res"></div>
+                <div class="dot clip"></div>
+            </div>
+            <div class="slider-ctr">
+                <form action="{{route('convert')}}" method="POST" id="form" enctype="multipart/form-data"></form>
+                    <div class="slider">
+                        <div class="slider-form slider-start">
+                            <h2>Willkommen beim pr0verter, hier kannst du Videos für das pr0 hochladen und konvertieren lassen!</h2>
+                            <button class="start next"><span class="glyphicon glyphicon-console"></span> Starten</button>
+                        </div>
+                        <div class="slider-form slider-ul">
+                            <h2>Möchtest du ein Video zum pr0verter hochladen oder möchtest du eine URL zu einer externen Quelle angeben?</h2>
+                            <div class="label-ctr">
+                                <label class="radio">
+                                    <input type="radio" value="url" name="ulchoice" id="ul">
+                                    <div class="btn btn-file">
+                                        <span class="glyphicon glyphicon-cloud-upload"></span>
+                                        Upload
+                                    </div>
+                                </label>
+                                &nbsp;
+                                &nbsp;
+                                &nbsp;
+                                &nbsp;
+                                &nbsp;
+                                <label class="radio col-xs-offset-4">
+                                    <input type="radio" value="file" name="ulchoice" id="dl">
+                                    <div class="btn btn-file">
+                                        <span class="glyphicon glyphicon-link"></span>
+                                        URL
+                                    </div>
+                                </label>
+                            </div>
+                            <button class="ultype next" disabled="disabled">Weiter <span class="glyphicon glyphicon-chevron-right"></span></button>
+                        </div>
+                        <div class="slider-form slider-choose">
+                            <h2>Zurzeit werden Videos des Typs: webm,mp4,mkv,mov,avi,wmv,flv,3gp,gif Supportet.</h2>
+                            <div id="mydropzone" class="dropzone" style="display: none;">
+                                <h2>Hier kannst du das gewünschte Video per drag and drop oder durch draufklicken auswählen</h2>
+                                <div class="dropzone-previews">
+                                </div>
+                            </div>
 
-        <div id="status" style="display: none;"></div>
+                            <div id="formurl" class="form-group" style="display: none;">
+                                <h2>Bitte eine URL zu einem Video hier angeben!</h2>
+                                <input type="text" class="form-control" size=40 name="url" id="urlform" style="display: none;"/>
+                            </div>
+
+                            <button class="choose next" disabled="disabled">Weiter</button>
+                        </div>
+
+                        <div class="slider-form slider-size">
+                            <h2>Bitte hier die Größe des fertigen Videos festlegen, ohne pr0mium 6MB, mit 12MB</h2>
+                            <div class="form-group input-group row-group">
+                                <div class="input-group-addon">1 - 30</div>
+                                <input type="number" id="limit" name="limit" value="6" min="1" max="30" class="form-control"/>
+                                <div class="input-group-addon">MB</div>
+                            </div>
+                            <button class="size next">Weiter <span class="glyphicon glyphicon-chevron-right"></span></button>
+                        </div>
+
+                        <div class="slider-form slider-sound">
+                            <label for="sound">
+                                Hier kannst du entweder keinen Ton oder die Qualität des Tons festlegen. Bitte bedenke das eine höhere Tonqualität mehr Speicherplatz verbraucht.
+                            </label>
+                            <input type="text" id="sound" readonly style="background-color: #161618; border: 0px;">
+                            <input type="hidden" id="refsound" name="sound">
+                            <div id="slider">
+                            </div>
+                            <button class="sound next">Weiter <span class="glyphicon glyphicon-chevron-right"></span></button>
+                        </div>
+                        <div class="slider-form slider-res">
+                            <h2>Hier kannst du festlegen ob du die Origrinalauflösung beibehalten willst oder nicht.</h2>
+                            <div class="label-ctr">
+                                <label class="checkbox">
+                                    <input type="checkbox" name="res" id="res">
+                                    <div class="btn btn-check">
+                                        <span class="glyphicon glyphicon-resize-full"></span>
+                                        Auflösung anpassen!
+                                    </div>
+                                </label>
+                            </div>
+                            <button class="res next">Weiter <span class="glyphicon glyphicon-chevron-right"></span></button>
+                        </div>
+                        <div class="slider-form slider-clip">
+                            CLIP + ENDE
+                            <button class="clip next">Weiter <span class="glyphicon glyphicon-chevron-right"></span></button>
+                        </div>
+
+
+
+                    </div>
+                </form>
+            </div>
+        </div>
 @endsection

@@ -22,9 +22,6 @@
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
-
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
 </head>
 <body>
     <div id="app">
@@ -61,8 +58,17 @@
                 </div>
             </div>
         </nav>
-
         @yield('content')
     </div>
+                <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}"></script>
+
+    <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
+
+    <script src="{{ asset('js/dropzone.js') }}"></script>
+
+    <script src="{{ asset('js/form.js') }}"></script>
+
+    <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
 </body>
 </html>
