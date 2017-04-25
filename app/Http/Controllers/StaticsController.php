@@ -2,23 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class StaticsController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         return view('statics.index');
     }
 
-    public function converter() {
+    public function converter()
+    {
         return view('converter.home');
     }
 
-    public function faq() {
+    public function faq()
+    {
         return view('statics.faq');
     }
 
-    public function contact() {
+    public function contact()
+    {
         return view('statics.contact');
     }
 }

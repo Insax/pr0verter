@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Providers;
+
 use App\Helpers\VideoStream;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;

@@ -1,52 +1,52 @@
 <?php
+
 namespace App\Helpers;
+
 /**
  *  * Description of VideoStream
- *   *
+ *   *.
  *    * @author Rana
  *     * @link http://codesamplez.com/programming/php-html5-video-streaming-tutorial
  *      */
 class VideoStream
 {
-    private $path = "";
-    private $stream = "";
+    private $path = '';
+    private $stream = '';
     private $buffer = 102400;
-    private $start  = -1;
-    private $end    = -1;
-    private $size   = 0;
+    private $start = -1;
+    private $end = -1;
+    private $size = 0;
 
-    function __construct()
+    public function __construct()
     {
     }
 
     /**
-     *      * Open stream
+     *      * Open stream.
      *           */
     private function open()
     {
-        if (!($this->stream = fopen($this->path, 'rb'))) {
+        if (! ($this->stream = fopen($this->path, 'rb'))) {
             die('Could not open stream for reading');
         }
-
     }
 
     /**
-     *      * Set proper header to serve the video content
+     *      * Set proper header to serve the video content.
      *           */
     private function setHeader()
     {
         ob_get_clean();
-        header("Content-Type: video/mp4");
-        header("Cache-Control: max-age=2592000, public");
-        header("Expires: ".gmdate('D, d M Y H:i:s', time()+2592000) . ' GMT');
-        header("Last-Modified: ".gmdate('D, d M Y H:i:s', @filemtime($this->path)) . ' GMT' );
+        header('Content-Type: video/mp4');
+        header('Cache-Control: max-age=2592000, public');
+        header('Expires: '.gmdate('D, d M Y H:i:s', time() + 2592000).' GMT');
+        header('Last-Modified: '.gmdate('D, d M Y H:i:s', @filemtime($this->path)).' GMT');
         $this->start = 0;
-        $this->size  = filesize($this->path);
-        $this->end   = $this->size - 1;
-        header("Accept-Ranges: 0-".$this->end);
+        $this->size = filesize($this->path);
+        $this->end = $this->size - 1;
+        header('Accept-Ranges: 0-'.$this->end);
 
         if (isset($_SERVER['HTTP_RANGE'])) {
-
             $c_start = $this->start;
             $c_end = $this->end;
 
@@ -58,7 +58,7 @@ class VideoStream
             }
             if ($range == '-') {
                 $c_start = $this->size - substr($range, 1);
-            }else{
+            } else {
                 $range = explode('-', $range);
                 $c_start = $range[0];
 
@@ -75,18 +75,15 @@ class VideoStream
             $length = $this->end - $this->start + 1;
             fseek($this->stream, $this->start);
             header('HTTP/1.1 206 Partial Content');
-            header("Content-Length: ".$length);
+            header('Content-Length: '.$length);
             header("Content-Range: bytes $this->start-$this->end/".$this->size);
+        } else {
+            header('Content-Length: '.$this->size);
         }
-        else
-        {
-            header("Content-Length: ".$this->size);
-        }
-
     }
 
     /**
-     *      * close curretly opened stream
+     *      * close curretly opened stream.
      *           */
     private function end()
     {
@@ -95,15 +92,15 @@ class VideoStream
     }
 
     /**
-     *      * perform the streaming of calculated range
+     *      * perform the streaming of calculated range.
      *           */
     private function stream()
     {
         $i = $this->start;
         set_time_limit(0);
-        while(!feof($this->stream) && $i <= $this->end) {
+        while (! feof($this->stream) && $i <= $this->end) {
             $bytesToRead = $this->buffer;
-            if(($i+$bytesToRead) > $this->end) {
+            if (($i + $bytesToRead) > $this->end) {
                 $bytesToRead = $this->end - $i + 1;
             }
             $data = fread($this->stream, $bytesToRead);
@@ -114,9 +111,9 @@ class VideoStream
     }
 
     /**
-     *      * Start streaming video content
+     *      * Start streaming video content.
      *           */
-    function start($file)
+    public function start($file)
     {
         $this->path = $file;
         $this->open();

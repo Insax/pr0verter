@@ -2,9 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Translation\Translator;
 use Ixudra\Curl\Facades\Curl;
+use Illuminate\Foundation\Http\FormRequest;
 
 class UploadFileToConvert extends FormRequest
 {
@@ -43,10 +42,11 @@ class UploadFileToConvert extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $data = (object)$validator->getData();
-            if($data->url) {
-                if (!$this->validateRemoteFile($data->url))
+            $data = (object) $validator->getData();
+            if ($data->url) {
+                if (! $this->validateRemoteFile($data->url)) {
                     $validator->errors()->add('url', 'Bitte eine richtige URL angeben!');
+                }
             }
         });
     }
@@ -61,34 +61,44 @@ class UploadFileToConvert extends FormRequest
     {
         $data = Curl::to($url)->allowRedirect()->withOption('NOBODY', true)->withOption('HEADER', true)->get();
 
-        if($data) {
-            if(preg_match('/^HTTP\/1\.[01] (\d\d\d)/', $data, $matches))
-                $status = (int)$matches[1];
+        if ($data) {
+            if (preg_match('/^HTTP\/1\.[01] (\d\d\d)/', $data, $matches)) {
+                $status = (int) $matches[1];
+            }
 
-            if(preg_match('/Content-Length: (\d+)/', $data, $matches))
-                $contentLength = (int)$matches[1];
+            if (preg_match('/Content-Length: (\d+)/', $data, $matches)) {
+                $contentLength = (int) $matches[1];
+            }
 
-            if(preg_match('/Content-Type: (\w+\/\w+)/', $data, $matches))
+            if (preg_match('/Content-Type: (\w+\/\w+)/', $data, $matches)) {
                 $contentType = $matches[1];
+            }
 
-            if(isset($status))
-                if($status == 200 || ($status > 300 && $status <= 308))
-                    if(isset($contentLength))
+            if (isset($status)) {
+                if ($status == 200 || ($status > 300 && $status <= 308)) {
+                    if (isset($contentLength)) {
                         $contentSize = $contentLength;
-                    else
+                    } else {
                         return false;
-                else
+                    }
+                } else {
                     return false;
-            else
+                }
+            } else {
                 return false;
+            }
 
-            if(isset($contentType))
-                if(($contentType === 'image/gif' || (preg_match( '/^video\/.*/', $contentType))) && $contentSize < 104857600)
+            if (isset($contentType)) {
+                if (($contentType === 'image/gif' || (preg_match('/^video\/.*/', $contentType))) && $contentSize < 104857600) {
                     return true;
-                else
+                } else {
                     return false;
+                }
+            }
+
             return false;
         }
+
         return false;
     }
 }

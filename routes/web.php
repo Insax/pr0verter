@@ -21,13 +21,13 @@ Route::group(['prefix' => '/', 'middleware' => 'web'], function () {
     Route::get('contact', 'StaticsController@contact')->name('contact');
 });
 
-/**
+/*
  * Dynamic content
  */
 
 Route::get('changelog', 'ChangelogController@index')->name('changelog');
 
-/**
+/*
  * Routes used for converting
  */
 Route::group(['prefix' => 'converter', 'middleware' => 'web'], function () {
@@ -37,8 +37,7 @@ Route::group(['prefix' => 'converter', 'middleware' => 'web'], function () {
     Route::post('convert', 'ConverterController@convert')->name('convert');
 });
 
-
-/**
+/*
  * Routes for file handling
  */
 Route::group(['prefix' => 'file/', 'middleware' => 'throttle:200,10'], function () {
@@ -46,7 +45,7 @@ Route::group(['prefix' => 'file/', 'middleware' => 'throttle:200,10'], function 
     Route::get('download/{guid}', 'ConverterController@download')->name('download');
 });
 
-/**
+/*
  * Admin routes
  */
 Route::group(['prefix' => 'admin/'], function () {
