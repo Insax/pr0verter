@@ -1,5 +1,5 @@
 <p align="center">
-<a href="https://travis-ci.org/Insax/pr0verter-redone/"><img src="https://travis-ci.org/Insax/pr0verter-redone.svg" alt="Build Status"></a>
+<a href="https://travis-ci.org/Insax/pr0verter/"><img src="https://travis-ci.org/Insax/pr0verter-redone.svg" alt="Build Status"></a>
 </p>
 
 ## About pr0verter
