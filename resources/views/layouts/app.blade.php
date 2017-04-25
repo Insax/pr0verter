@@ -73,5 +73,9 @@
     <script src="{{ asset('js/progress.js') }}"></script>
     @endif
 
+    @if(Request::route()->getName() == 'show')
+        <script src="{{ asset('js/copy.js') }}"></script>
+    @endif
+
 </body>
 </html>

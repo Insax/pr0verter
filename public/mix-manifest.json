@@ -2,5 +2,6 @@
   "/js/app.js": "/js/app.js",
   "/css/app.css": "/css/app.css",
   "/js/form.js": "/js/form.js",
-  "/js/progress.js": "/js/progress.js"
+  "/js/progress.js": "/js/progress.js",
+  "/js/copy.js": "/js/copy.js"
 }
