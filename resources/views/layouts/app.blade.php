@@ -65,10 +65,13 @@
 
     <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
 
-    <script src="{{ asset('js/dropzone.js') }}"></script>
-
     <script src="{{ asset('js/form.js') }}"></script>
 
     <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
+
+    @if(Request::route()->getName() == 'progress')
+    <script src="{{ asset('js/progress.js') }}"></script>
+    @endif
+
 </body>
 </html>

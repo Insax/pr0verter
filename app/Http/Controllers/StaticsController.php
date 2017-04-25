@@ -21,4 +21,8 @@ class StaticsController extends Controller
     public function contact() {
         return view('statics.contact');
     }
+
+    public function test(Request $request) {
+        var_dump($request->input(), $request->file());
+    }
 }

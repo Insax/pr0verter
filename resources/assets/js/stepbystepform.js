@@ -1,22 +1,65 @@
-Dropzone.autoDiscover = false;
 $(function() {
-    var $startButton = $(".start"),
-        $ultypeButton = $(".ultype"),
-        $chooseButton = $(".choose"),
-        $sizeButton = $(".size"),
-        $soundButton = $(".sound"),
-        $resButton = $(".res"),
-        $clipButton = $(".clip"),
-        $input = $("input"),
-        $name = $(".name"),
-        $more = $(".more"),
-        $reset = $(".reset"),
+    var $startButton = $(".start.next"),
+        $ultypeButton = $(".ultype.next"),
+        $chooseButton = $(".choose.next"),
+        $chooseButtonBack = $(".choose.back"),
+        $sizeButton = $(".size.next"),
+        $sizeButtonBack = $(".size.back"),
+        $soundButton = $(".sound.next"),
+        $soundButtonBack = $(".sound.back"),
+        $resButton = $(".res.next"),
+        $resButtonBack = $(".res.back"),
+        $clipButton = $(".clip.next"),
+        $clipButtonBack = $(".clip.back"),
+        $cutstart = $("#cutstart"),
+        $cutend = $("#cutend"),
         $ctr = $(".container-steps"),
         $ul = $("#ul"),
         $dl = $("#dl"),
         $dlform = $("#formurl"),
         $dlform2 = $("#urlform"),
-        text = 'Kein Ton';
+        text = 'Kein Ton',
+        bar = $('#upload_bar'),
+        status = $('#status'),
+        $file = $('#file');
+
+    $('#form').ajaxForm({
+        cache: false,
+        dataType: 'json',
+        beforeSend: function () {
+            $('#full').fadeIn();
+        },
+        uploadProgress: function (event, position, total, percentComplete) {
+            var percentVal = percentComplete + '%';
+            bar.width(percentVal);
+            bar.html(percentVal);
+        },
+        success: function(data)
+        {
+            if(data.sucess === true)
+                document.location.href = '/converter/progress/' + data.guid;
+        },
+        error: function(data)
+        {
+            $('#full').fadeOut();
+            $.each(data, function(index, element) {
+                if(typeof (element.url) !== 'undefined') {
+                    $('#urlerror').attr('class', 'has-error');
+                    $('#urlerrhelp').show().attr('class', 'help-block').html('<strong>' + element.url + '</strong>')
+                }
+            });
+        }
+    });
+
+    function is_supported(path) {
+        if (path.includes('.')) {
+            var url_array = path.split('.'),
+                format = url_array[url_array.length - 1],
+                supported_formats = ["webm", "mp4", "mkv", "mov", "avi", "wmv", "flv", "3gp", "gif"];
+            return (supported_formats.indexOf(format.toLowerCase()) > -1);
+        }
+        return false;
+    }
 
     $( "#slider" ).slider({
         value: 2,
@@ -57,9 +100,106 @@ $(function() {
     }
     $( "#sound" ).val( text );
     $( "#refsound" ).val( $( "#slider" ).slider( "value" ) );
+
+
     $startButton.on("click", function(e){
-        $(this).text("Saving...").queue(function(){
+        $(this).queue(function(){
             $ctr.addClass("ul slider-ul-active").removeClass("start slider-start-active");
+            $(this).dequeue();
+        });
+        e.preventDefault();
+    });
+
+    $ultypeButton.on("click", function(e){
+        $(this).delay(200).queue(function(){
+            $ctr.addClass("choose slider-choose-active").removeClass("ul slider-ul-active");
+            if($ul.is(':checked') == true) {
+                $("#mydropzone").show();
+            }
+            if($dl.is(':checked') == true) {
+                $chooseButton.removeAttr('disabled');
+                $file.removeAttr('required');
+                $dlform.show();
+                $dlform2.show();
+            }
+            $(this).dequeue();
+        });
+        e.preventDefault();
+    });
+
+    $chooseButton.on("click", function (e) {
+        if(($dl.is(':checked') && $('#urlform').val()) || $ul.is(':checked')) {
+            $(this).delay(200).queue(function () {
+                $ctr.addClass("size slider-size-active").removeClass("choose slider-choose-active");
+                $(this).dequeue();
+            });
+        }
+        else
+            alert('Bitte eine URL eingeben!');
+
+        e.preventDefault();
+    });
+
+    $chooseButtonBack.on("click", function (e) {
+        $(this).delay(200).queue(function () {
+            $ctr.addClass("ul slider-ul-active").removeClass("choose slider-choose-active");
+            $(this).dequeue();
+        });
+        e.preventDefault();
+    });
+
+    $sizeButton.on("click", function (e) {
+        $(this).delay(200).queue(function () {
+            $ctr.addClass("sound slider-sound-active").removeClass("size slider-size-active");
+            $(this).dequeue();
+        });
+        e.preventDefault();
+    });
+
+    $sizeButtonBack.on("click", function (e) {
+        $(this).delay(200).queue(function () {
+            $ctr.addClass("choose slider-choose-active").removeClass("size slider-size-active");
+            $(this).dequeue();
+        });
+        e.preventDefault();
+    });
+
+    $soundButton.on("click", function (e) {
+        $(this).delay(200).queue(function () {
+            $ctr.addClass("res slider-res-active").removeClass("sound slider-sound-active");
+            $(this).dequeue();
+        });
+        e.preventDefault();
+    });
+
+    $soundButtonBack.on("click", function (e) {
+        $(this).delay(200).queue(function () {
+            $ctr.addClass("size slider-size-active").removeClass("sound slider-sound-active");
+            $(this).dequeue();
+        });
+        e.preventDefault();
+    });
+
+    $resButton.on("click", function (e) {
+        $(this).delay(200).queue(function () {
+            $ctr.addClass("clip slider-clip-active").removeClass("res slider-res-active");
+            $(this).dequeue();
+        });
+        e.preventDefault();
+    });
+
+    $resButtonBack.on("click", function (e) {
+        $(this).delay(200).queue(function () {
+            $ctr.addClass("sound slider-sound-active").removeClass("res slider-res-active");
+            $(this).dequeue();
+        });
+        e.preventDefault();
+    });
+
+    $clipButtonBack.on("click", function (e) {
+        $(this).delay(200).queue(function () {
+            $ctr.addClass("res slider-res-active").removeClass("clip slider-clip-active");
+            $(this).dequeue();
         });
         e.preventDefault();
     });
@@ -72,69 +212,14 @@ $(function() {
         $ultypeButton.removeAttr("disabled");
     });
 
-    $ultypeButton.on("click", function(e){
-        $(this).text("Speichere...").delay(900).queue(function(){
-            $ctr.addClass("choose slider-choose-active").removeClass("ul slider-ul-active");
-            console.log($ul.is(":checked"), $dl.is(":checked"));
-            if($ul.is(':checked') == true) {
-                $("#mydropzone").show().dropzone({
-                    url: "/file/post",
-                    clickable: true,
-                    autoProcessQueue: false,
-                    uploadMultiple: false,
-                    maxFiles: 1,
-                    paramName: "file",
-                    maxFilesize: 100,
-                    init: function() {
-                        this.on("addedfile", function(file) {
-                            $('.dz-progress').hide();
-                            $chooseButton.removeAttr('disabled');
-                        });
-                        this.on("removedfile", function (file) {
-                            $chooseButton.addAttr('disabled', 'disabled');
-                        })
-                    }
-                });
-            }
-            if($dl.is(':checked') == true) {
-                $chooseButton.removeAttr('disabled');
-                $dlform.show();
-                $dlform2.show();
-            }
-        });
-        e.preventDefault();
-    });
-
-    $chooseButton.on("click", function (e) {
-        if(($dl.is(':checked') && $('#urlform').val()) || $ul.is(':checked')) {
-            $(this).text("Speichere...").delay(900).queue(function () {
-                $ctr.addClass("size slider-size-active").removeClass("ul choose slider-choose-active");
+    $file.on( "change", function (e) {
+        if(is_supported($(this).val()))
+            $chooseButton.removeAttr('disabled');
+        else {
+            alert('Bitte ein Video mit richtigem Format angeben!');
+            $(this).val(function() {
+                return this.defaultValue;
             });
         }
-        else
-            alert('Bitte eine URL eingeben!');
-
-        e.preventDefault();
-    });
-
-    $sizeButton.on("click", function (e) {
-        $(this).text("Speichere...").delay(900).queue(function () {
-            $ctr.addClass("sound slider-sound-active").removeClass("ul choose size slider-size-active");
-        });
-        e.preventDefault();
-    });
-
-    $soundButton.on("click", function (e) {
-        $(this).text("Speichere...").delay(900).queue(function () {
-            $ctr.addClass("res slider-res-active").removeClass("ul choose size sound slider-sound-active");
-        });
-        e.preventDefault();
-    });
-
-    $resButton.on("click", function (e) {
-        $(this).text("Speichere...").delay(900).queue(function () {
-            $ctr.addClass("clip slider-clip-active").removeClass("ul choose size sound res slider-res-active");
-        });
-        e.preventDefault();
     });
 });

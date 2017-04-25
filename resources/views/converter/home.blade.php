@@ -46,9 +46,11 @@
                 <div class="dot res"></div>
                 <div class="dot clip"></div>
             </div>
+
             <div class="slider-ctr">
-                <form action="{{route('convert')}}" method="POST" id="form" enctype="multipart/form-data"></form>
-                    <div class="slider">
+                <div class="slider">
+                    <form action="{{route('convert')}}" method="POST" id="form" enctype="multipart/form-data">
+                        {{ csrf_field() }}
                         <div class="slider-form slider-start">
                             <h2>Willkommen beim pr0verter, hier kannst du Videos für das pr0 hochladen und konvertieren lassen!</h2>
                             <button class="start next"><span class="glyphicon glyphicon-console"></span> Starten</button>
@@ -57,7 +59,7 @@
                             <h2>Möchtest du ein Video zum pr0verter hochladen oder möchtest du eine URL zu einer externen Quelle angeben?</h2>
                             <div class="label-ctr">
                                 <label class="radio">
-                                    <input type="radio" value="url" name="ulchoice" id="ul">
+                                    <input type="radio" name="choice" id="ul">
                                     <div class="btn btn-file">
                                         <span class="glyphicon glyphicon-cloud-upload"></span>
                                         Upload
@@ -69,7 +71,7 @@
                                 &nbsp;
                                 &nbsp;
                                 <label class="radio col-xs-offset-4">
-                                    <input type="radio" value="file" name="ulchoice" id="dl">
+                                    <input type="radio" name="choice" id="dl">
                                     <div class="btn btn-file">
                                         <span class="glyphicon glyphicon-link"></span>
                                         URL
@@ -80,18 +82,23 @@
                         </div>
                         <div class="slider-form slider-choose">
                             <h2>Zurzeit werden Videos des Typs: webm,mp4,mkv,mov,avi,wmv,flv,3gp,gif Supportet.</h2>
-                            <div id="mydropzone" class="dropzone" style="display: none;">
+                            <div id="mydropzone" style="display: none;">
                                 <h2>Hier kannst du das gewünschte Video per drag and drop oder durch draufklicken auswählen</h2>
-                                <div class="dropzone-previews">
+
+                                <div class="file-area" id="file-area">
+                                    <input type="file" name="file" id="file" required="required"/>
+                                    <div class="file-dummy">
+                                        <span class="default">Bitte ein Video auswählen!</span>
+                                        <span class="success">Video akzeptiert.</span>
+                                    </div>
                                 </div>
                             </div>
-
                             <div id="formurl" class="form-group" style="display: none;">
                                 <h2>Bitte eine URL zu einem Video hier angeben!</h2>
                                 <input type="text" class="form-control" size=40 name="url" id="urlform" style="display: none;"/>
                             </div>
-
-                            <button class="choose next" disabled="disabled">Weiter</button>
+                            <button class="choose back"><span class="glyphicon glyphicon-chevron-left"></span> Zurück</button>
+                            <button class="choose next" disabled="disabled">Weiter <span class="glyphicon glyphicon-chevron-right"></span></button>
                         </div>
 
                         <div class="slider-form slider-size">
@@ -101,6 +108,7 @@
                                 <input type="number" id="limit" name="limit" value="6" min="1" max="30" class="form-control"/>
                                 <div class="input-group-addon">MB</div>
                             </div>
+                            <button class="size back"><span class="glyphicon glyphicon-chevron-left"></span> Zurück</button>
                             <button class="size next">Weiter <span class="glyphicon glyphicon-chevron-right"></span></button>
                         </div>
 
@@ -112,30 +120,51 @@
                             <input type="hidden" id="refsound" name="sound">
                             <div id="slider">
                             </div>
+                            <button class="sound back"><span class="glyphicon glyphicon-chevron-left"></span> Zurück</button>
                             <button class="sound next">Weiter <span class="glyphicon glyphicon-chevron-right"></span></button>
                         </div>
                         <div class="slider-form slider-res">
                             <h2>Hier kannst du festlegen ob du die Origrinalauflösung beibehalten willst oder nicht.</h2>
                             <div class="label-ctr">
                                 <label class="checkbox">
-                                    <input type="checkbox" name="res" id="res">
+                                    <input type="checkbox" name="autoResolution" id="res">
                                     <div class="btn btn-check">
                                         <span class="glyphicon glyphicon-resize-full"></span>
-                                        Auflösung anpassen!
+                                        Auflösung beibehalten!
                                     </div>
                                 </label>
                             </div>
+                            <button class="res back"><span class="glyphicon glyphicon-chevron-left">Zurück</span></button>
                             <button class="res next">Weiter <span class="glyphicon glyphicon-chevron-right"></span></button>
                         </div>
                         <div class="slider-form slider-clip">
-                            CLIP + ENDE
-                            <button class="clip next">Weiter <span class="glyphicon glyphicon-chevron-right"></span></button>
+                            <h2>Hier kannst du die Zeitstempel für den Schnitt angeben. Angabe in Sekunden.</h2>
+                            <input placeholder="Startzeit" type="text" class="form-control" name="cutstart" id="cutstart"/>
+                            <input placeholder="Endzeit" type="text" class="form-control" name="cutend" id="cutend"/>
+
+                            <button class="clip back"><span class="glyphicon glyphicon-chevron-left">Zurück</span></button>
+                            <input class="btn btn-danger clip next" type="submit" value="Konvertieren">
                         </div>
-
-
-
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
+
+
+
+    <div class="container-fluid" id="full">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 text-center" id="progress">
+                <h2>lade hoch ...</h2>
+                <br>
+                <div class="progress">
+                    <div id="upload_bar" class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0;">
+                        0%
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="status" style="display: none;"></div>
 @endsection

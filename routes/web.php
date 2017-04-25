@@ -52,3 +52,8 @@ Route::group(['prefix' => 'file/', 'middleware' => 'throttle:200,10'], function 
 Route::group(['prefix' => 'admin/'], function () {
     Route::get('login', 'AdminController@login')->name('login');
 });
+
+/**
+ * POST Test Route
+ */
+Route::post('test', 'StaticsController@test')->name('test');
