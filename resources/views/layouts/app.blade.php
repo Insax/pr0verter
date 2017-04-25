@@ -16,6 +16,9 @@
     <link href="{{ asset('css/jquery-ui.structure.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/jquery-ui.theme.min.css') }}" rel="stylesheet">
 
+    @if(Request::route()->getName() === 'progress')
+    <link href="{{ asset('css/dark-snake.css')}}" rel="stylesheet">
+    @endif
     <!-- Scripts -->
     <script>
         window.Laravel = {!! json_encode([
@@ -73,11 +76,23 @@
 
     @if(Request::route()->getName() == 'progress')
     <script src="{{ asset('js/progress.js') }}"></script>
+
+    <script src="{{asset('js/snake.js')}}"></script>
+    <script type="text/javascript">
+        var mySnakeBoard = new SNAKE.Board(  {
+            boardContainer: "game-area",
+            fullScreen: false,
+            width: 580,
+            height:400
+        });
+    </script>
     @endif
 
     @if(Request::route()->getName() == 'show')
         <script src="{{ asset('js/copy.js') }}"></script>
     @endif
+
+
 
 </body>
 </html>
