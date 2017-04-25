@@ -44,8 +44,18 @@ $(function() {
             $('#full').fadeOut();
             $.each(data, function(index, element) {
                 if(typeof (element.url) !== 'undefined') {
-                    $('#urlerror').attr('class', 'has-error');
-                    $('#urlerrhelp').show().attr('class', 'help-block').html('<strong>' + element.url + '</strong>')
+                    $(this).queue(function(){
+                        $ctr.addClass("ul slider-ul-active").removeClass("clip slider-clip-active");
+                        $(this).dequeue();
+                        alert(element.url);
+                    });
+                }
+                else if(typeof (element.file) !== 'undefined') {
+                    $(this).queue(function(){
+                        $ctr.addClass("ul slider-ul-active").removeClass("clip slider-clip-active");
+                        $(this).dequeue();
+                        alert(element.file);
+                    });
                 }
             });
         }
@@ -115,12 +125,15 @@ $(function() {
             $ctr.addClass("choose slider-choose-active").removeClass("ul slider-ul-active");
             if($ul.is(':checked') == true) {
                 $("#mydropzone").show();
+                $dlform.hide();
+                $dlform2.hide();
             }
             if($dl.is(':checked') == true) {
                 $chooseButton.removeAttr('disabled');
                 $file.removeAttr('required');
                 $dlform.show();
                 $dlform2.show();
+                $("#mydropzone").hide();
             }
             $(this).dequeue();
         });

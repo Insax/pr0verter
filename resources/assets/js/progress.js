@@ -3,7 +3,7 @@ $(function () {
     function get_progress() {
         var action = '/converter/duration',
             method = 'GET',
-            data = {file_name: '{{$guid}}'};
+            data = {file_name: location.href.substr(location.href.lastIndexOf('/') + 1)};
         $.ajax({
             url: action,
             type: method,
@@ -14,7 +14,7 @@ $(function () {
             } else {
                 $('#bar').width(data + '%').html(data + '%');
                 if (data === '100') {
-                    document.location.href = '/converter/show/{{$guid}}';
+                    document.location.href = '/converter/show/' + location.href.substr(location.href.lastIndexOf('/') + 1);
                 }
             }
         });

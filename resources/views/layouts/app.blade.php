@@ -65,7 +65,9 @@
 
     <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
 
+    @if(Request::route()->getName() == 'converter')
     <script src="{{ asset('js/form.js') }}"></script>
+    @endif
 
     <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
 
