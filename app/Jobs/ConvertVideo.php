@@ -2,16 +2,16 @@
 
 namespace App\Jobs;
 
-use FFMpeg\Coordinate\Dimension;
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
 use FFMpeg\Format\Video\X264;
 use Illuminate\Bus\Queueable;
+use FFMpeg\Coordinate\Dimension;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Facades\DB;
 
 class ConvertVideo implements ShouldQueue
 {
@@ -22,7 +22,7 @@ class ConvertVideo implements ShouldQueue
      */
     private $filters;
     /**
-     * @var integer
+     * @var int
      */
     private $maxDuration;
 
@@ -31,7 +31,7 @@ class ConvertVideo implements ShouldQueue
      */
     private $duration;
     /**
-     * @var integer
+     * @var int
      */
     private $status;
 
@@ -85,7 +85,6 @@ class ConvertVideo implements ShouldQueue
      * @param $limit
      * @return void
      */
-
     public function __construct($loc, $name, $sound, $res, $limit)
     {
         $this->loc = $loc;
@@ -100,14 +99,14 @@ class ConvertVideo implements ShouldQueue
             'ffmpeg.binaries' => env('FFMPEG_BIN', '/usr/local/bin/ffmpeg'),
             'ffmpeg.threads' => env('FFMPEG_THREADS', 12),
             'ffprobe.binaries' => env('FFMPEG_PROBE_BIN', '/usr/local/bin/ffprobe'),
-            'timeout' => env('FFMPEG_TIMEOUT', 3600)];
+            'timeout' => env('FFMPEG_TIMEOUT', 3600), ];
 
         $this->filters = [
             '-t', $this->maxDuration,
             '-profile:v', 'baseline',
             '-level', '3.0',
             '-preset', 'medium',
-            '-fs', $this->limit * 8192 . "k",
+            '-fs', $this->limit * 8192 .'k',
         ];
     }
 
@@ -133,15 +132,15 @@ class ConvertVideo implements ShouldQueue
             $this->sound = 0;
             array_push($this->filters, '-pix_fmt', 'yuv420p');
         } else {
-            $this->duration = (float)$ffprobe->format($this->loc . '/' . $this->name)->get('duration');
+            $this->duration = (float) $ffprobe->format($this->loc.'/'.$this->name)->get('duration');
         }
 
-        $this->px = $ffprobe->streams($this->loc . '/' . $this->name)->videos()->first()->getDimensions()->getWidth();
-        $this->py = $ffprobe->streams($this->loc . '/' . $this->name)->videos()->first()->getDimensions()->getHeight();
+        $this->px = $ffprobe->streams($this->loc.'/'.$this->name)->videos()->first()->getDimensions()->getWidth();
+        $this->py = $ffprobe->streams($this->loc.'/'.$this->name)->videos()->first()->getDimensions()->getHeight();
 
-        $video = $ffmpeg->open($this->loc . '/' . $this->name);
+        $video = $ffmpeg->open($this->loc.'/'.$this->name);
 
-        if (!$this->res) {
+        if (! $this->res) {
             $this->getAutoResolution();
             $video->filters()->resize(new Dimension($this->px, $this->py));
         }
@@ -171,7 +170,7 @@ class ConvertVideo implements ShouldQueue
             DB::table('data')->where('guid', $this->name)->update(['progress' => $percentage]);
         });
 
-        if ($video->save($format, $this->loc . '/public/' . $this->name . '.mp4')) {
+        if ($video->save($format, $this->loc.'/public/'.$this->name.'.mp4')) {
             DB::table('data')->where('guid', $this->name)->update(['progress' => 100]);
         }
     }
@@ -180,9 +179,10 @@ class ConvertVideo implements ShouldQueue
     {
         $this->duration = min($this->duration, $this->maxDuration);
 
-        $bitrate = ($this->limit * 8192) / (float)$this->duration;
+        $bitrate = ($this->limit * 8192) / (float) $this->duration;
 
-        !$this->sound ?: $bitrate -= $audioBitrate;
+        ! $this->sound ?: $bitrate -= $audioBitrate;
+
         return $bitrate;
     }
 
@@ -196,7 +196,7 @@ class ConvertVideo implements ShouldQueue
                 if ($this->px > 480 && $this->py < 720) {
                     $this->px /= 1.5;
                     $this->py /= 1.5;
-                } else if ($this->px > 720) {
+                } elseif ($this->px > 720) {
                     $this->px /= 2;
                     $this->py /= 2;
                 }
@@ -210,7 +210,7 @@ class ConvertVideo implements ShouldQueue
                 if ($this->px > 480 && $this->py < 720) {
                     $this->px /= 1.6; // WARNGING: Test Values
                     $this->py /= 1.6; //
-                } else if ($this->px > 720) {
+                } elseif ($this->px > 720) {
                     $this->px /= 2.1; //
                     $this->py /= 2.1; //
                 }
@@ -224,7 +224,7 @@ class ConvertVideo implements ShouldQueue
                 if ($this->px > 480 && $this->py < 720) {
                     $this->px /= 1.9; // test
                     $this->py /= 1.9; //
-                } else if ($this->px > 720) {
+                } elseif ($this->px > 720) {
                     $this->px /= 2.5; //
                     $this->py /= 2.5; //
                 }
@@ -244,16 +244,17 @@ class ConvertVideo implements ShouldQueue
 
     private function getGIFDuration()
     {
-        $gif_graphic_control_extension = "/21f904[0-9a-f]{2}([0-9a-f]{4})[0-9a-f]{2}00/";
-        $file = file_get_contents($this->loc . '/' . $this->name);
+        $gif_graphic_control_extension = '/21f904[0-9a-f]{2}([0-9a-f]{4})[0-9a-f]{2}00/';
+        $file = file_get_contents($this->loc.'/'.$this->name);
         $file = bin2hex($file);
 
         $total_delay = 0;
         preg_match_all($gif_graphic_control_extension, $file, $matches);
         foreach ($matches[1] as $match) {
-
-            $delay = hexdec(substr($match, -2) . substr($match, 0, 2));
-            if ($delay == 0) $delay = 1;
+            $delay = hexdec(substr($match, -2).substr($match, 0, 2));
+            if ($delay == 0) {
+                $delay = 1;
+            }
             $total_delay += $delay;
         }
 
@@ -264,7 +265,7 @@ class ConvertVideo implements ShouldQueue
 
     private function isGif()
     {
-        if (strtolower(DB::table('data')->where('guid', $this->name)->value("origEnding")) === ".gif") {
+        if (strtolower(DB::table('data')->where('guid', $this->name)->value('origEnding')) === '.gif') {
             return true;
         } else {
             return false;

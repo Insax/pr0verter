@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,7 +25,8 @@ class HomeController extends Controller
     public function index()
     {
         $guids = DB::table('data')->where([['user_id', '=', Auth::id()], ['deleted', '=', 0]])->get();
-        $guids ? : $guids = 'Du hast bisher keine Videos hochgeladen';
+        $guids ?: $guids = 'Du hast bisher keine Videos hochgeladen';
+
         return view('home', ['guids' => $guids]);
     }
 }
