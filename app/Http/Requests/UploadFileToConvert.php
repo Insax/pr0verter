@@ -52,7 +52,7 @@ class UploadFileToConvert extends FormRequest
             if ($data->youtube)
                 if(!Youtube::getVideoInfo(Youtube::parseVidFromURL($data->youtube)))
                     $validator->errors()->add('youtube', 'Diese Youtube Adresse ist nicht gültig');
-                elseif($this->YTDurationToSeconds(Youtube::getVideoInfo(Youtube::parseVidFromURL($data->youtbe))->contentDetails->duration) > (40*60))
+                elseif($this->YTDurationToSeconds(Youtube::getVideoInfo(Youtube::parseVidFromURL($data->youtube))->contentDetails->duration) > (40*60))
                     $validator->errors()->add('youtube', 'Dieses Youtube Video ist zu lang!');
 
             if($data->cutstart && $data->cutend && $data->cutstart > $data->cutend)
