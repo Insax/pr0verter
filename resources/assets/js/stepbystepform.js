@@ -16,8 +16,11 @@ $(function() {
         $ctr = $(".container-steps"),
         $ul = $("#ul"),
         $dl = $("#dl"),
+        $yt = $("#yt"),
         $dlform = $("#formurl"),
         $dlform2 = $("#urlform"),
+        $ytform = $("#youtubeform"),
+        $ytform2 = $("#youtube"),
         text = 'Kein Ton',
         bar = $('#upload_bar'),
         status = $('#status'),
@@ -127,6 +130,8 @@ $(function() {
                 $("#mydropzone").show();
                 $dlform.hide();
                 $dlform2.hide();
+                $ytform.hide();
+                $ytform2.hide();
             }
             if($dl.is(':checked') == true) {
                 $chooseButton.removeAttr('disabled');
@@ -134,6 +139,17 @@ $(function() {
                 $dlform.show();
                 $dlform2.show();
                 $("#mydropzone").hide();
+                $ytform.hide();
+                $ytform2.hide();
+            }
+            if($yt.is(':checked') == true) {
+                $chooseButton.removeAttr('disabled');
+                $file.removeAttr('required');
+                $("#mydropzone").hide();
+                $dlform.hide();
+                $dlform2.hide();
+                $ytform.show();
+                $ytform2.show();
             }
             $(this).dequeue();
         });
@@ -141,7 +157,7 @@ $(function() {
     });
 
     $chooseButton.on("click", function (e) {
-        if(($dl.is(':checked') && $('#urlform').val()) || $ul.is(':checked')) {
+        if(($yt.is(':checked') && $ytform2.val())|| ($dl.is(':checked') && $dlform2.val()) || $ul.is(':checked')) {
             $(this).delay(200).queue(function () {
                 $ctr.addClass("size slider-size-active").removeClass("choose slider-choose-active");
                 $(this).dequeue();
@@ -222,6 +238,10 @@ $(function() {
     });
 
     $dl.on("click", function (e) {
+        $ultypeButton.removeAttr("disabled");
+    });
+
+    $yt.on("click", function (e) {
         $ultypeButton.removeAttr("disabled");
     });
 

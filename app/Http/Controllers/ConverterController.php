@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Jobs\ConvertVideo;
 use App\Facades\VideoStream;
+use App\Jobs\DownloadFromYoutube;
 use Ixudra\Curl\Facades\Curl;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use App\Http\Requests\AskForDuration;
 use Illuminate\Support\Facades\Input;
 use App\Http\Requests\UploadFileToConvert;
+
 
 class ConverterController extends Controller
 {
@@ -28,6 +29,12 @@ class ConverterController extends Controller
         $requestLimit = $request->input('limit', 6);
         $requestURL = $request->input('url');
         $requestFile = $request->file('file');
+        $requestYT = $request->input('youtube');
+        $requestStart = $request->input('cutstart');
+        $requestEnd = $request->input('cutend');
+
+        $requestStart ? : $requestStart = 0;
+        $requestEnd ? : $requestEnd = 0;
 
         while (1) {
             if (DB::table('data')->where('guid', '=', $rndName)->value('guid')) {
@@ -61,18 +68,22 @@ class ConverterController extends Controller
             $extension = '.'.Input::file('file')->getClientOriginalExtension();
             Input::file('file')->move($saveLocation, $rndName);
             $this->saveToDB($rndName, $extension);
-            dispatch((new ConvertVideo($saveLocation, $rndName, $requestSound, $requestAutoResolution, $requestLimit))->onQueue('convert'));
+            dispatch((new ConvertVideo($saveLocation, $rndName, $requestSound, $requestAutoResolution, $requestLimit, $requestStart, $requestEnd))->onQueue('convert'));
             $data = ['sucess' => true, 'guid' => $rndName];
             echo json_encode($data);
         } elseif ($requestURL) {
             $extension = $this->getExtension($requestURL);
             Curl::to($requestURL)->download($saveLocation.'/'.$rndName);
             $this->saveToDB($rndName, $extension);
-            dispatch((new ConvertVideo($saveLocation, $rndName, $requestSound, $requestAutoResolution, $requestLimit))->onQueue('convert'));
+            dispatch((new ConvertVideo($saveLocation, $rndName, $requestSound, $requestAutoResolution, $requestLimit, $requestStart, $requestEnd))->onQueue('convert'));
             $data = ['sucess' => true, 'guid' => $rndName];
             echo json_encode($data);
-        } else {
-            return back()->withInput();
+        } elseif ($requestYT) {
+            $extension = '';
+            $this->saveToDB($rndName, $extension);
+            $this->dispatch((new DownloadFromYoutube($requestYT, $saveLocation, $rndName, $requestSound, $requestAutoResolution, $requestLimit, $requestStart, $requestEnd))->onQueue('download'));
+            $data = ['sucess' => true, 'guid' => $rndName];
+            echo json_encode($data);
         }
     }
 

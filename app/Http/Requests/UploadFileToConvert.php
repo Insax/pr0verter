@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+
 use Ixudra\Curl\Facades\Curl;
+use Alaouy\Youtube\Facades\Youtube;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UploadFileToConvert extends FormRequest
@@ -43,11 +45,16 @@ class UploadFileToConvert extends FormRequest
     {
         $validator->after(function ($validator) {
             $data = (object) $validator->getData();
-            if ($data->url) {
-                if (! $this->validateRemoteFile($data->url)) {
+            if ($data->url)
+                if (! $this->validateRemoteFile($data->url))
                     $validator->errors()->add('url', 'Bitte eine richtige URL angeben!');
-                }
-            }
+
+            if ($data->youtube)
+                if(!Youtube::getVideoInfo(Youtube::parseVidFromURL($data->youtube)))
+                    $validator->errors()->add('youtube', 'Diese Youtube Adresse ist nicht gültig');
+
+            if($data->cutstart && $data->cutend && $data->cutstart > $data->cutend)
+                $validator->errors()->add('cutstart', 'Der Start des Videos kann nicht nach dem Ende sein!');
         });
     }
 

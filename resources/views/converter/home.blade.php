@@ -77,6 +77,15 @@
                                         URL
                                     </div>
                                 </label>
+                                &nbsp;
+                                &nbsp;
+                                <label class="radio">
+                                    <input type="radio" name="choice" id="yt">
+                                    <div class="btn btn-file">
+                                        <span class="glyphicon glyphicon-floppy-save"></span>
+                                        Youtube URL
+                                    </div>
+                                </label>
                             </div>
                             <button class="ultype next" disabled="disabled">Weiter <span class="glyphicon glyphicon-chevron-right"></span></button>
                         </div>
@@ -96,6 +105,10 @@
                             <div id="formurl" class="form-group" style="display: none;">
                                 <h2>Bitte eine URL zu einem Video hier angeben!</h2>
                                 <input type="text" class="form-control" size=40 name="url" id="urlform" style="display: none;"/>
+                            </div>
+                            <div id="youtubeform" class="form-group" style="display: none;">
+                                <h2>Bitte eine URL zu einem Youtubevideo hier angeben!</h2>
+                                <input type="text" class="form-control" size=40 name="youtube" id="youtube" style="display: none;"/>
                             </div>
                             <button class="choose back"><span class="glyphicon glyphicon-chevron-left"></span> Zurück</button>
                             <button class="choose next" disabled="disabled">Weiter <span class="glyphicon glyphicon-chevron-right"></span></button>
