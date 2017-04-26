@@ -118,7 +118,8 @@ class ConvertVideo implements ShouldQueue
             '-profile:v', 'baseline',
             '-level', '3.0',
             '-preset', 'medium',
-            '-fs', $this->limit * 8192 .'k',
+            '-fs', $this->limit * 8192 . "k",
+            '-movflags', '+faststart',
         ];
     }
 
@@ -142,7 +143,9 @@ class ConvertVideo implements ShouldQueue
         if ($this->isGif()) {
             $this->duration = $this->getGIFDuration();
             $this->sound = 0;
-            array_push($this->filters, '-pix_fmt', 'yuv420p');
+
+            $this->filters[] = '-pix_fmt';
+            $this->filters[] = 'yuv420p';
         } else {
             $this->duration = (float) $ffprobe->format($this->loc.'/'.$this->name)->get('duration');
         }
