@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 
+use DateInterval;
 use Ixudra\Curl\Facades\Curl;
 use Alaouy\Youtube\Facades\Youtube;
 use Illuminate\Foundation\Http\FormRequest;
@@ -52,7 +53,7 @@ class UploadFileToConvert extends FormRequest
             if ($data->youtube)
                 if(!Youtube::getVideoInfo(Youtube::parseVidFromURL($data->youtube)))
                     $validator->errors()->add('youtube', 'Diese Youtube Adresse ist nicht gültig');
-                elseif($this->YTDurationToSeconds(Youtube::getVideoInfo(Youtube::parseVidFromURL($data->youtube))->contentDetails->duration) > (40*60))
+                elseif(strtotime(Youtube::getVideoInfo(Youtube::parseVidFromURL($data->youtube))->contentDetails->duration) > (40*60))
                     $validator->errors()->add('youtube', 'Dieses Youtube Video ist zu lang!');
 
             if($data->cutstart && $data->cutend && $data->cutstart > $data->cutend)
@@ -60,12 +61,9 @@ class UploadFileToConvert extends FormRequest
         });
     }
 
-    private function YTDurationToSeconds($duration) {
-        preg_match_all('/(\d+)/', $duration, $parts);
-        $hours = $parts[0][0];
-        $minutes = $parts[0][1];
-        $seconds = $parts[0][2];
-        return $hours * 3600 + $minutes * 60 + $seconds;
+    private function YTDurationToSeconds($time) {
+        $duration = new DateInterval($time);
+        return (60 * 60 * $duration->h) + (60 * $duration->i) + $duration->s;
     }
 
     /**
