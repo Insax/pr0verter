@@ -26,9 +26,4 @@ class StaticsController extends Controller
     {
         return view('statics.contact');
     }
-
-    public function test()
-    {
-        return var_dump();
-    }
 }

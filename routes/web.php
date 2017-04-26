@@ -55,4 +55,4 @@ Route::group(['prefix' => 'admin/'], function () {
 /*
  * Test Routes
  */
-Route::get('test', 'StaticsController@test')->name('test');
+//Route::get('test', 'StaticsController@test')->name('test');

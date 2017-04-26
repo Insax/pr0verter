@@ -152,8 +152,8 @@
                         </div>
                         <div class="slider-form slider-clip">
                             <h2>Hier kannst du die Zeitstempel für den Schnitt angeben. Angabe in Sekunden.</h2>
-                            <input placeholder="Startzeit" type="text" class="form-control" name="cutstart" id="cutstart"/>
-                            <input placeholder="Endzeit" type="text" class="form-control" name="cutend" id="cutend"/>
+                            <input placeholder="Startzeit" type="number" class="form-control" name="cutstart" id="cutstart"/>
+                            <input placeholder="Endzeit" type="number" class="form-control" name="cutend" id="cutend"/>
 
                             <button class="clip back"><span class="glyphicon glyphicon-chevron-left">Zurück</span></button>
                             <input class="btn btn-danger clip next" type="submit" value="Konvertieren">
