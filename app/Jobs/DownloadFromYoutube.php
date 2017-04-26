@@ -23,13 +23,23 @@ class DownloadFromYoutube implements ShouldQueue
     private $sound;
     private $res;
     private $limit;
+    private $start;
+    private $end;
 
     /**
-     * Create a new job instance.
+     * DownloadFromYoutube constructor.
      *
-     * @return void
+     * @param $url
+     * @param $loc
+     * @param $name
+     * @param $sound
+     * @param $res
+     * @param $limit
+     * @param $
+     * @param $start
+     * @param $end
      */
-    public function __construct($url, $loc, $name, $sound, $res, $limit)
+    public function __construct($url, $loc, $name, $sound, $res, $limit, , $start, $end)
     {
         $this->url = $url;
         $this->loc = $loc;
@@ -37,12 +47,13 @@ class DownloadFromYoutube implements ShouldQueue
         $this->sound = $sound;
         $this->res = $res;
         $this->limit = $limit;
+        $this->start = $start;
+        $this->end = $end;
     }
 
     /**
      * Execute the job.
      *
-     * @return void
      */
     public function handle()
     {
@@ -52,6 +63,6 @@ class DownloadFromYoutube implements ShouldQueue
         $video = $dl->download($this->url);
         DB::table('data')->where('guid', '=', $this->name)->update(['origEnding' => '.'.$video->getExt()]);
         File::move($video->getFile()->getPathname(), $this->loc.'/'.$this->name);
-        dispatch((new ConvertVideo($this->loc, $this->name, $this->sound, $this->res, $this->limit))->onQueue('convert'));
+        dispatch((new ConvertVideo($this->loc, $this->name, $this->sound, $this->res, $this->limit, $this->start, $this->end))->onQueue('convert'));
     }
 }

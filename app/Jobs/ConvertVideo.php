@@ -76,6 +76,16 @@ class ConvertVideo implements ShouldQueue
     private $py;
 
     /**
+     * @var
+     */
+    private $start;
+
+    /**
+     * @var
+     */
+    private $end;
+
+    /**
      * Create a new job instance.
      *
      * @param $loc
@@ -85,13 +95,15 @@ class ConvertVideo implements ShouldQueue
      * @param $limit
      * @return void
      */
-    public function __construct($loc, $name, $sound, $res, $limit)
+    public function __construct($loc, $name, $sound, $res, $limit, $start, $end)
     {
         $this->loc = $loc;
         $this->name = $name;
         $this->sound = $sound;
         $this->res = $res;
         $this->limit = $limit;
+        $this->start = $start;
+        $this->end = $end;
 
         $this->maxDuration = env('VIDEO_MAX_DURATION_IN_SECONDS', 179);
 
