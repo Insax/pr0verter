@@ -6,6 +6,7 @@ use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
 use FFMpeg\Format\Video\X264;
 use Illuminate\Bus\Queueable;
+use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\Coordinate\Dimension;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Queue\SerializesModels;
@@ -114,7 +115,6 @@ class ConvertVideo implements ShouldQueue
             'timeout' => env('FFMPEG_TIMEOUT', 3600), ];
 
         $this->filters = [
-            '-t', $this->maxDuration,
             '-profile:v', 'baseline',
             '-level', '3.0',
             '-preset', 'medium',
@@ -155,10 +155,34 @@ class ConvertVideo implements ShouldQueue
 
         $video = $ffmpeg->open($this->loc.'/'.$this->name);
 
+
         if (! $this->res) {
             $this->getAutoResolution();
             $video->filters()->resize(new Dimension($this->px, $this->py));
         }
+
+        if($this->start > $this->duration) {
+            $this->start = 0;
+        }
+
+        if($this->end > $this->duration) {
+            $this->end = $this->duration;
+        }
+
+        if(($this->end - $this->start) > $this->maxDuration) {
+            $this->end = $this->start + $this->maxDuration;
+        }
+
+        if($this->start || $this->end)
+            $this->duration = $this->end - $this->start;
+
+        if(!$this->start && !$this->end)
+            $video->filters()->clip(TimeCode::fromSeconds($this->start), TimeCode::fromSeconds($this->maxDuration));
+
+
+        if($this->start || $this->end)
+            $video->filters()->clip(TimeCode::fromSeconds($this->start), TimeCode::fromSeconds($this->duration));
+
 
         $format = new X264();
         $format->setAudioCodec('aac');
@@ -200,6 +224,7 @@ class ConvertVideo implements ShouldQueue
 
         return $bitrate;
     }
+
 
     private function getAutoResolution()
     {

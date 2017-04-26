@@ -39,7 +39,7 @@ class DownloadFromYoutube implements ShouldQueue
      * @param $start
      * @param $end
      */
-    public function __construct($url, $loc, $name, $sound, $res, $limit, , $start, $end)
+    public function __construct($url, $loc, $name, $sound, $res, $limit, $start, $end)
     {
         $this->url = $url;
         $this->loc = $loc;

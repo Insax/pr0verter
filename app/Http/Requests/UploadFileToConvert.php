@@ -52,10 +52,20 @@ class UploadFileToConvert extends FormRequest
             if ($data->youtube)
                 if(!Youtube::getVideoInfo(Youtube::parseVidFromURL($data->youtube)))
                     $validator->errors()->add('youtube', 'Diese Youtube Adresse ist nicht gültig');
+                elseif($this->YTDurationToSeconds(Youtube::getVideoInfo(Youtube::parseVidFromURL($data->youtbe))->contentDetails->duration) > (40*60))
+                    $validator->errors()->add('youtube', 'Dieses Youtube Video ist zu lang!');
 
             if($data->cutstart && $data->cutend && $data->cutstart > $data->cutend)
                 $validator->errors()->add('cutstart', 'Der Start des Videos kann nicht nach dem Ende sein!');
         });
+    }
+
+    private function YTDurationToSeconds($duration) {
+        $match = preg_match($duration, '/PT(\d+H)?(\d+M)?(\d+S)?/')
+        $hours = (intval($match[1]) || 0);
+        $minutes = (intval($match[2]) || 0);
+        $seconds = (intval($match[3]) || 0);
+        return $hours * 3600 + $minutes * 60 + $seconds;
     }
 
     /**
