@@ -61,10 +61,10 @@ class UploadFileToConvert extends FormRequest
     }
 
     private function YTDurationToSeconds($duration) {
-        $match = preg_match($duration, '/PT(\d+H)?(\d+M)?(\d+S)?/');
-        $hours = (intval($match[1]) || 0);
-        $minutes = (intval($match[2]) || 0);
-        $seconds = (intval($match[3]) || 0);
+        preg_match_all('/(\d+)/', $duration, $parts);
+        $hours = $parts[0][0];
+        $minutes = $parts[0][1];
+        $seconds = $parts[0][2];
         return $hours * 3600 + $minutes * 60 + $seconds;
     }
 
