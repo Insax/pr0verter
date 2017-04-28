@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use YoutubeDl\YoutubeDl;
-use Alaouy\Youtube\Facades\Youtube;
-
 class StaticsController extends Controller
 {
     public function index()
