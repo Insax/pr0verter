@@ -1,6 +1,6 @@
 <p align="center">
 <a href="https://travis-ci.org/Insax/pr0verter/"><img src="https://travis-ci.org/Insax/pr0verter.svg" alt="Build Status"></a>
-<a href="https://styleci.io/repos/87954236"><img src"https://styleci.io/repos/87954236/shield?branch=master" alt="StyleCI"></a>
+<a href="https://styleci.io/repos/87954236"><img src"https://styleci.io/repos/87954236/shield" alt="Style CI"></a>
 </p>
 
 ## About pr0verter
