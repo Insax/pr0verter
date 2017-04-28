@@ -4,13 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Jobs\ConvertVideo;
 use App\Facades\VideoStream;
-use App\Jobs\DownloadFromYoutube;
 use Ixudra\Curl\Facades\Curl;
+use App\Jobs\DownloadFromYoutube;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\AskForDuration;
 use Illuminate\Support\Facades\Input;
 use App\Http\Requests\UploadFileToConvert;
-
 
 class ConverterController extends Controller
 {
@@ -33,8 +32,8 @@ class ConverterController extends Controller
         $requestStart = $request->input('cutstart');
         $requestEnd = $request->input('cutend');
 
-        $requestStart ? : $requestStart = 0;
-        $requestEnd ? : $requestEnd = 0;
+        $requestStart ?: $requestStart = 0;
+        $requestEnd ?: $requestEnd = 0;
 
         while (1) {
             if (DB::table('data')->where('guid', '=', $rndName)->value('guid')) {

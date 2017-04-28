@@ -118,7 +118,7 @@ class ConvertVideo implements ShouldQueue
             '-profile:v', 'baseline',
             '-level', '3.0',
             '-preset', 'medium',
-            '-fs', $this->limit * 8192 . "k",
+            '-fs', $this->limit * 8192 .'k',
             '-movflags', '+faststart',
         ];
     }
@@ -155,34 +155,34 @@ class ConvertVideo implements ShouldQueue
 
         $video = $ffmpeg->open($this->loc.'/'.$this->name);
 
-
         if (! $this->res) {
             $this->getAutoResolution();
             $video->filters()->resize(new Dimension($this->px, $this->py));
         }
 
-        if($this->start > $this->duration) {
+        if ($this->start > $this->duration) {
             $this->start = 0;
         }
 
-        if($this->end > $this->duration) {
+        if ($this->end > $this->duration) {
             $this->end = $this->duration;
         }
 
-        if(($this->end - $this->start) > $this->maxDuration) {
+        if (($this->end - $this->start) > $this->maxDuration) {
             $this->end = $this->start + $this->maxDuration;
         }
 
-        if($this->start || $this->end)
+        if ($this->start || $this->end) {
             $this->duration = $this->end - $this->start;
+        }
 
-        if(!$this->start && !$this->end)
+        if (! $this->start && ! $this->end) {
             $video->filters()->clip(TimeCode::fromSeconds($this->start), TimeCode::fromSeconds($this->maxDuration));
+        }
 
-
-        if($this->start || $this->end)
+        if ($this->start || $this->end) {
             $video->filters()->clip(TimeCode::fromSeconds($this->start), TimeCode::fromSeconds($this->duration));
-
+        }
 
         $format = new X264();
         $format->setAudioCodec('aac');
@@ -224,7 +224,6 @@ class ConvertVideo implements ShouldQueue
 
         return $bitrate;
     }
-
 
     private function getAutoResolution()
     {

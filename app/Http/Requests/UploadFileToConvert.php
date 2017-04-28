@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-
 use DateInterval;
 use Ixudra\Curl\Facades\Curl;
 use Alaouy\Youtube\Facades\Youtube;
@@ -46,23 +45,30 @@ class UploadFileToConvert extends FormRequest
     {
         $validator->after(function ($validator) {
             $data = (object) $validator->getData();
-            if ($data->url)
-                if (! $this->validateRemoteFile($data->url))
+            if ($data->url) {
+                if (! $this->validateRemoteFile($data->url)) {
                     $validator->errors()->add('url', 'Bitte eine richtige URL angeben!');
+                }
+            }
 
-            if ($data->youtube)
-                if(!Youtube::getVideoInfo(Youtube::parseVidFromURL($data->youtube)))
+            if ($data->youtube) {
+                if (! Youtube::getVideoInfo(Youtube::parseVidFromURL($data->youtube))) {
                     $validator->errors()->add('youtube', 'Diese Youtube Adresse ist nicht gültig');
-                elseif(strtotime(Youtube::getVideoInfo(Youtube::parseVidFromURL($data->youtube))->contentDetails->duration) > (40*60))
+                } elseif (strtotime(Youtube::getVideoInfo(Youtube::parseVidFromURL($data->youtube))->contentDetails->duration) > (40 * 60)) {
                     $validator->errors()->add('youtube', 'Dieses Youtube Video ist zu lang!');
+                }
+            }
 
-            if($data->cutstart && $data->cutend && $data->cutstart > $data->cutend)
+            if ($data->cutstart && $data->cutend && $data->cutstart > $data->cutend) {
                 $validator->errors()->add('cutstart', 'Der Start des Videos kann nicht nach dem Ende sein!');
+            }
         });
     }
 
-    private function YTDurationToSeconds($time) {
+    private function YTDurationToSeconds($time)
+    {
         $duration = new DateInterval($time);
+
         return (60 * 60 * $duration->h) + (60 * $duration->i) + $duration->s;
     }
 
