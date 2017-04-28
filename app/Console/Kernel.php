@@ -4,6 +4,8 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,8 +26,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->call(function() {
+            $data = DB::table('data')->where('created_at', '<', '(NOW() - INTERVAL 1 DAY)')->value('guid');
+            foreach ($data as $e) {
+                Storage::delete($e);
+                Storage::delete('public/'.$e.'.mp4');
+                DB::table('data')->where('guid', '=', $e)->delete();
+            }
+        })->daily();
     }
 
     /**
