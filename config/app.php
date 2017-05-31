@@ -180,6 +180,12 @@ return [
         App\Providers\VideoStreamServiceProvider::class,
         GrahamCampbell\GitHub\GitHubServiceProvider::class,
         Alaouy\Youtube\YoutubeServiceProvider::class,
+
+        /*
+         * IDE Supporting Service Provider
+         */
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+
     ],
 
     /*

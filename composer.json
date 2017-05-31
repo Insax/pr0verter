@@ -7,6 +7,7 @@
     "require": {
         "php": ">=5.6.4",
         "alaouy/youtube": "^1.2",
+        "barryvdh/laravel-ide-helper": "^2.3",
         "doctrine/dbal": "^2.5",
         "graham-campbell/github": "^5.1",
         "ixudra/curl": "^6.10",
@@ -47,6 +48,8 @@
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+            "php artisan ide-helper:generate",
+            "php artisan ide-helper:meta",
             "php artisan optimize"
         ]
     },
