@@ -28,10 +28,14 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(function() {
             $data = DB::table('data')->where('created_at', '<', '(NOW() - INTERVAL 1 DAY)')->value('guid');
-            foreach ($data as $e) {
-                Storage::delete($e);
-                Storage::delete('public/'.$e.'.mp4');
-                DB::table('data')->where('guid', '=', $e)->delete();
+
+            if($data)
+            {
+                foreach ($data as $e) {
+                    Storage::delete($e);
+                    Storage::delete('public/'.$e.'.mp4');
+                    DB::table('data')->where('guid', '=', $e)->delete();
+                }
             }
         })->daily();
     }
