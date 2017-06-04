@@ -5,6 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="theme-color" content="#ffffff">
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -49,14 +57,23 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        <li><a href="{{ url('converter') }}">mp4 Converter</a></li>
-                        <li><a href="{{ url('faq') }}">FAQ</a></li>
-                        <li><a href="{{ url('contact') }}">Kontakt</a></li>
-                        <li><a href="{{ url('changelog') }}">Changelog</a></li>
+                        <li class="{{Route::is('converter') ? 'active' : ''}}"><a href="{{ route('converter') }}">mp4 Converter</a></li>
+                        <li class="{{Route::is('subtitle') ? 'active' : ''}}"><a href="{{ route('subtitle') }}">Subtitle Editor</a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
+                        <li class="{{Route::is('faq') ? 'active' : ''}}"><a href="{{ route('faq') }}">FAQ</a></li>
+                        <li class="{{Route::is('contact') ? 'active' : ''}}"><a href="{{ route('contact') }}">Kontakt</a></li>
+                        <li class="{{Route::is('changelog') ? 'active' : ''}}"><a href="{{ route('changelog') }}">Changelog</a></li>
+                        @if(isset($cookies))
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Deine pr0jekte <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Action</a></li>
+                                </ul>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </div>

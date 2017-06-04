@@ -19,6 +19,7 @@ Route::group(['prefix' => '/', 'middleware' => 'web'], function () {
     Route::get('converter', 'StaticsController@converter')->name('converter');
     Route::get('faq', 'StaticsController@faq')->name('faq');
     Route::get('contact', 'StaticsController@contact')->name('contact');
+    Route::get('subtitle', 'SubtitleController@index')->name('subtitle');
 });
 
 /*
@@ -35,6 +36,14 @@ Route::group(['prefix' => 'converter', 'middleware' => 'web'], function () {
     Route::get('show/{guid}', 'ConverterController@show')->name('show');
     Route::get('duration', 'ConverterController@duration')->name('duration');
     Route::post('convert', 'ConverterController@convert')->name('convert');
+});
+
+/*
+ * Subtitle Routes
+ */
+
+Route::group(['prefix' => 'subtitle', 'middleware' => 'web'], function () {
+    Route::get('test', 'SubtitleController@test')->name('test');
 });
 
 /*
