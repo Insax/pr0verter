@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class StaticsController extends Controller
 {
@@ -14,13 +14,13 @@ class StaticsController extends Controller
 
     public function error(Request $request)
     {
-        if($request->input('type') === 'vid')
+        if ($request->input('type') === 'vid') {
             return view('error.errorVid');
-        else if($request->input('type') === 'yt')
+        } elseif ($request->input('type') === 'yt') {
             return view('error.errorYT');
-        else
+        } else {
             Redirect::route('index');
-
+        }
     }
 
     public function converter()

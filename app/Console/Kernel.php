@@ -2,10 +2,10 @@
 
 namespace App\Console;
 
-use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
@@ -26,11 +26,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(function() {
+        $schedule->call(function () {
             $data = DB::table('data')->where('created_at', '<', '(NOW() - INTERVAL 1 DAY)')->value('guid');
 
-            if($data)
-            {
+            if ($data) {
                 foreach ($data as $e) {
                     Storage::delete($e);
                     Storage::delete('public/'.$e.'.mp4');
