@@ -794,3 +794,33 @@ $panel-default-heading-bg: #161618;
     }
   }
 }
+
+.jumbotron {
+  background-color: #161618;
+}
+
+.container .jumbotron a {
+  color: #333333;
+  &:hover {
+    color: #EE4D2E;
+    cursor: pointer;
+  }
+}
+
+.navbar-default .navbar-nav > li > a {
+  color: #fff;
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+  color: #EE4D2E;
+}
+
+body {
+  color: #fff;
+}
+
+.navbar-default .navbar-brand {
+  color: #fff;
+  text-transform: uppercase;
+}
+

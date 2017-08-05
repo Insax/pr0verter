@@ -1,10 +1,11 @@
 @extends('layouts.app')
 @section('content')
-    <div class="content">
-        <div class="title m-b-md">
-            mp4 Converter
+    <div class="container text-center">
+        <div class="jumbotron">
+            <div class="row">
+                <h1>pr0verter</h1>
+            </div>
         </div>
-    </div>
         <div class="container-steps slider-start-active">
             <div class="steps">
                 <div class="step step-start">
@@ -162,6 +163,7 @@
                 </div>
             </div>
         </div>
+    </div>
 
 
 
