@@ -20,11 +20,9 @@ Route::group(['prefix' => '/', 'middleware' => 'web'], function () {
     Route::get('faq', 'StaticsController@faq')->name('faq');
     Route::get('contact', 'StaticsController@contact')->name('contact');
     Route::get('subtitle', 'SubtitleController@index')->name('subtitle');
+    Route::get('error', 'StaticsController@error')->name('error');
 });
 
-Route::group(['prefix' => 'error', 'middleware' => 'web'], function () {
-    Route::get('', 'StaticsController@error')->name('error');
-});
 
 /*
  * Dynamic content

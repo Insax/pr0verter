@@ -11,8 +11,10 @@ $(function () {
         }).done(function (data) {
             if (data === 'error') {
                 document.location.href = '/';
-            } else if(data === '420'){
-                document.location.href = '/error';
+            } else if(data === '420') {
+                document.location.href = '/error?type=vid';
+            } else if(data === '421') {
+                document.location.href = '/error?type=yt';
             } else {
                 $('#bar').width(data + '%').html(data + '%');
                 if (data === '100') {
