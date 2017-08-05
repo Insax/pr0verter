@@ -23,7 +23,6 @@ Route::group(['prefix' => '/', 'middleware' => 'web'], function () {
     Route::get('error', 'StaticsController@error')->name('error');
 });
 
-
 /*
  * Dynamic content
  */
