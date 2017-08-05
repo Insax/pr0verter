@@ -8,7 +8,7 @@
             </div>
             <div class="row">
                 | <a href="{{ route('converter') }}">mp4 Converter</a> |
-                <a href="{{ route('subtitle') }}">Subtitle Editor</a> |
+                <!-- <a href="{{ route('subtitle') }}">Subtitle Editor</a> | -->
                 <a href="{{ route('faq') }}">FAQ</a> |
                 <a href="{{ route('contact') }}">Kontakt</a> |
                 <a href="{{ route('changelog') }}">Changelog</a> |

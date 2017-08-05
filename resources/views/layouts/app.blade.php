@@ -58,7 +58,7 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         <li class="{{Route::is('converter') ? 'active' : ''}}"><a href="{{ route('converter') }}">mp4 Converter</a></li>
-                        <li class="{{Route::is('subtitle') ? 'active' : ''}}"><a href="{{ route('subtitle') }}">Subtitle Editor</a></li>
+                        <li role="presentation" class="{{Route::is('subtitle') ? 'active' : ''}} disabled"><a href="#"> <!-- href="{{ route('subtitle') }}" --> <s>Subtitle Editor</s> </a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
