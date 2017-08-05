@@ -11,6 +11,8 @@ $(function () {
         }).done(function (data) {
             if (data === 'error') {
                 document.location.href = '/';
+            } else if(data === '420'){
+                document.location.href = '/error';
             } else {
                 $('#bar').width(data + '%').html(data + '%');
                 if (data === '100') {

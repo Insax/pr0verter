@@ -62,4 +62,8 @@ class DownloadFromYoutube implements ShouldQueue
         File::move($video->getFile()->getPathname(), $this->loc.'/'.$this->name);
         dispatch((new ConvertVideo($this->loc, $this->name, $this->sound, $this->res, $this->limit, $this->start, $this->end))->onQueue('convert'));
     }
+    public function failed(){
+        // 420 = error
+        DB::table('data')->where('guid', $this->name)->update(['progress' => 420]);
+    }
 }

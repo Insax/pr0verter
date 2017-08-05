@@ -9,6 +9,11 @@ class StaticsController extends Controller
         return view('statics.index');
     }
 
+    public function error()
+    {
+        return view('statics.error');
+    }
+
     public function converter()
     {
         return view('converter.home');

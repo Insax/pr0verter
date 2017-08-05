@@ -310,4 +310,7 @@ class ConvertVideo implements ShouldQueue
             return false;
         }
     }
+    public function failed(){
+        DB::table('data')->where('guid', $this->name)->update(['progress' => 420]);
+    }
 }
