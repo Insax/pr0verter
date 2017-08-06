@@ -31,7 +31,7 @@ class UploadFileToConvert extends FormRequest
             'limit' => 'required|integer',
             'sound' => 'required|string|max:2',
             'autoResolution' => 'nullable|string|max:2',
-            'file' => 'nullable|mimes:webm,mp4,mkv,mov,avi,wmv,flv,3gp,gif',
+            'file' => 'nullable|mimes:webm,mp4,mkv,mov,avi,wmv,flv,3gp,gif,bin,qt,asf',
         ];
     }
 
@@ -71,6 +71,7 @@ class UploadFileToConvert extends FormRequest
                 $validator->errors()->add('limitnull', 'Gib mindestens 1Mb an!');
             }
         });
+
     }
 
     private function YTDurationToSeconds($time)
