@@ -5,9 +5,9 @@
             <div class="row">
                 <h1>pr0verter</h1>
             </div>
+		<div class="alert alert-danger" role="alert">Wir haben die gro&szlige Anzahl an fehlgeschlagenen Konvertierungen / Downloads bemerkt, haben den Fehler bereits gefunden, arbeiten aber noch an einer Lösung!</div>
         </div>
-	<div class="alert alert-danger" role="alert">Wir haben die gro&szlige Anzahl an fehlgeschlagenen Konvertierungen / Downloads bemerkt, haben den Fehler bereits gefunden, arbeiten aber noch an einer Lösung!</div>
-        <div class="container-steps slider-start-active">
+	<div class="container-steps slider-start-active">
             <div class="steps">
                 <div class="step step-start">
                     <div class="liner"></div>
