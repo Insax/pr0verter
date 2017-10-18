@@ -26,22 +26,24 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(function () {
-            $data = DB::table('data')->where('created_at', '<', '(NOW() - INTERVAL 1 DAY)')->value('guid');
-
-            if ($data) {
-                foreach ($data as $e) {
-                    Storage::delete($e);
-                    Storage::delete('public/'.$e.'.mp4');
-                    DB::table('data')->where('guid', '=', $e)->delete();
-                }
-            }
-        })->daily();
+      $schedule->call(function () {
+        $date = new DateTime;
+        $date->modify('-1 day');
+        $formatted_date = $date->format('Y-m-d H:i:s');
+        $data = DB::table('data')->where('created_at', '<', $formatted_date)->get(); Storage::delete($e);
+        if ($data) {
+          foreach ($data as $e) {
+            if(file_exists(storage_path().$e->guid))
+            	Storage::delete($e->guid);
+            if(file_exists(storage_path().'public/'.$e->guid.'.mp4'))
+            	Storage::delete('public/'.$e->guid.'.mp4');
+            DB::table('data')->where('guid', '=', $e)->delete();
+          }
+        }
+      })->daily();
     }
-
     /**
-     * Register the Closure based commands for the application.
-     *
+     * Register the Closure based commands for the application
      * @return void
      */
     protected function commands()
