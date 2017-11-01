@@ -115,8 +115,8 @@ class ConvertVideo implements ShouldQueue
             'timeout' => env('FFMPEG_TIMEOUT', 3600), ];
 
         $this->filters = [
-            '-profile:v', 'baseline',
-            '-level', '3.0',
+            '-profile:v', 'main',
+            '-level', '4.0',
             '-preset', 'medium',
             '-fs', $this->limit * 8192 .'k',
             '-movflags', '+faststart',
