@@ -220,7 +220,7 @@ class ConvertVideo implements ShouldQueue
 
         $bitrate = ($this->limit * 8000) / (float) $this->duration;
 
-        ! $this->sound ?: $bitrate -= $audioBitrate;
+        !$this->sound ? : $bitrate -= $audioBitrate;
 
         return $bitrate;
     }

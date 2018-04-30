@@ -43,7 +43,7 @@ class Kernel extends ConsoleKernel
             DB::table('data')->where('guid', '=', $e->guid)->delete();
           }
         }
-      })->daily();
+      })->twiceDaily(1, 13);
     }
     /**
      * Register the Closure based commands for the application

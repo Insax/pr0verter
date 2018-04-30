@@ -18,9 +18,9 @@ class StaticsController extends Controller
     public function error(Request $request)
     {
         if ($request->input('type') === 'vid') {
-            return view('errors.errorVid');
+            return view('error.errorVid');
         } elseif ($request->input('type') === 'yt') {
-            return view('errors.errorYT');
+            return view('error.errorYT');
         } else {
             Redirect::route('index');
         }
