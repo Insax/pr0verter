@@ -4,11 +4,10 @@
 /storage/*.key
 /vendor
 /.idea
+/.vscode
 /.vagrant
 Homestead.json
 Homestead.yaml
-.env
 npm-debug.log
-.DS_Store
-_ide_helper.php
-.phpstorm.meta.php
+yarn-error.log
+.env
