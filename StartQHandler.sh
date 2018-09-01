@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Q_BIN="php artisan queue:work --queue=convert,download --tries=1"
+Q_BIN="php artisan queue:work --queue=convert,download --tries=2"
 
     while x=1;
     do
