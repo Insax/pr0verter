@@ -116,7 +116,7 @@
                         </div>
 
                         <div class="slider-form slider-size">
-                            <h2>Bitte hier die Größe des fertigen Videos festlegen, ohne pr0mium 6MB, mit 12MB</h2>
+                            <h2>Bitte hier die Größe des fertigen Videos festlegen, ohne pr0mium 10MB, mit 20MB</h2>
                             <div class="form-group input-group row-group">
                                 <div class="input-group-addon">1 - 30</div>
                                 <input type="number" id="limit" name="limit" value="6" min="3" max="30" class="form-control"/>
