@@ -1,1 +1,111 @@
-!function(t){function e(r){if(n[r])return n[r].exports;var o=n[r]={i:r,l:!1,exports:{}};return t[r].call(o.exports,o,o.exports,e),o.l=!0,o.exports}var n={};e.m=t,e.c=n,e.i=function(t){return t},e.d=function(t,n,r){e.o(t,n)||Object.defineProperty(t,n,{configurable:!1,enumerable:!0,get:r})},e.n=function(t){var n=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(n,"a",n),n},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="",e(e.s=16)}({16:function(t,e,n){t.exports=n(4)},4:function(t,e){$(function(){function t(){var t={file_name:location.href.substr(location.href.lastIndexOf("/")+1)};$.ajax({url:"/converter/duration",type:"GET",data:t}).done(function(t){"error"===t?document.location.href="/":"420"===t?document.location.href="/error?type=vid":"421"===t?document.location.href="/error?type=yt":($("#bar").width(t+"%").html(t+"%"),"100"===t&&(document.location.href="/converter/show/"+location.href.substr(location.href.lastIndexOf("/")+1)))})}setInterval(t,2e3)})}});
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+/******/
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// identity function for calling harmony imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 16);
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ 16:
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(4);
+
+
+/***/ }),
+
+/***/ 4:
+/***/ (function(module, exports) {
+
+$(function () {
+    var interval = setInterval(get_progress, 2000);
+    function get_progress() {
+        var action = '/converter/duration',
+            method = 'GET',
+            data = { file_name: location.href.substr(location.href.lastIndexOf('/') + 1) };
+        $.ajax({
+            url: action,
+            type: method,
+            data: data
+        }).done(function (data) {
+            if (data === 'error') {
+                document.location.href = '/';
+            } else if (data === '420') {
+                document.location.href = '/error?type=vid';
+            } else if (data === '421') {
+                document.location.href = '/error?type=yt';
+            } else {
+                $('#bar').width(data + '%').html(data + '%');
+                if (data === '100') {
+                    document.location.href = '/converter/show/' + location.href.substr(location.href.lastIndexOf('/') + 1);
+                }
+            }
+        });
+    }
+});
+
+/***/ })
+
+/******/ });
