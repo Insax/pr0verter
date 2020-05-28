@@ -123,7 +123,7 @@
                                 <h2>Bitte hier die Größe des fertigen Videos festlegen, ohne pr0mium 6MB, mit 12MB</h2>
                                 <div class="form-group input-group row-group">
                                     <div class="input-group-addon">1 - 30</div>
-                                    <input type="number" id="limit" name="limit" value="6" min="3" max="30"
+                                    <input type="number" id="limit" name="limit" value="10" min="3" max="30"
                                            class="form-control"/>
                                     <div class="input-group-addon">MB</div>
                                 </div>
