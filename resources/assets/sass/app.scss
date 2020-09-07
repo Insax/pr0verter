@@ -29,12 +29,10 @@ button:active,
 
 .container-steps {
   width: 600px;
-  position: absolute;
+  max-width: 90%;
   top: 50%;
   left: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
+  margin: 0 auto;
 }
 
 .steps {
@@ -200,12 +198,19 @@ button:active,
 
 .slider {
   overflow: hidden;
-  width: 4200px;
+  width: 100%;
   -webkit-transition: .3s all ease;
   transition: .3s all ease;
-  -webkit-transform: translate(0px) scale(1);
-  -ms-transform: translate(0px) scale(1);
-  transform: translate(0px) scale(1);
+
+  #form {
+    display: flex;
+    flex-direction: row;
+    -webkit-transform: translate(0px) scale(1);
+    -ms-transform: translate(0px) scale(1);
+    transform: translate(0px) scale(1);
+    -webkit-transition: .3s all ease;
+    transition: .3s all ease;
+  }
 }
 
 .container-steps.slider-start-active .slider-ul,
@@ -308,9 +313,9 @@ button:active,
 }
 
 .slider-form {
-  float: left;
-  width: 600px;
+  width: 100%;
   text-align: center;
+  flex-shrink: 0;
 }
 
 .slider-form h2 {
@@ -372,11 +377,18 @@ button:active,
 
 .label-ctr {
   margin-bottom: 50px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  .radio {
+    margin-top: 10px;
+  }
 }
 
 label.radio {
-  height: 55px;
-  width: 55px;
   display: inline-block;
   margin: 0 10px;
   background: transparent;
@@ -406,8 +418,8 @@ label.radio input:checked + .btn-file:after {
 }
 
 label.checkbox {
-  height: 55px;
-  width: 55px;
+ // height: 55px;
+ // width: 55px;
   margin: 0 35%;
   background: transparent;
   position: relative;
@@ -453,10 +465,10 @@ label.checkbox input:checked + .btn-check:after {
   background: #5892fc;
 }
 
-.container-steps.ul .slider {
-  -webkit-transform: translate(-600px);
-  -ms-transform: translate(-600px);
-  transform: translate(-600px);
+.container-steps.ul #form {
+  -webkit-transform: translate(-100%);
+  -ms-transform: translate(-100%);
+  transform: translate(-100%);
 }
 
 .container-steps.ul .step-ul {
@@ -478,10 +490,10 @@ label.checkbox input:checked + .btn-check:after {
   background: #5892fc;
 }
 
-.container-steps.choose .slider {
-  -webkit-transform: translate(-1200px);
-  -ms-transform: translate(-1200px);
-  transform: translate(-1200px);
+.container-steps.choose #form {
+  -webkit-transform: translate(-200%);
+  -ms-transform: translate(-200%);
+  transform: translate(-200%);
 }
 
 .container-steps.choose .step-start,
@@ -510,10 +522,10 @@ label.checkbox input:checked + .btn-check:after {
   background: #5892fc;
 }
 
-.container-steps.size .slider {
-  -webkit-transform: translate(-1800px);
-  -ms-transform: translate(-1800px);
-  transform: translate(-1800px);
+.container-steps.size #form {
+  -webkit-transform: translate(-300%);
+  -ms-transform: translate(-300%);
+  transform: translate(-300%);
 }
 
 .container-steps.size .step-start,
@@ -543,10 +555,10 @@ label.checkbox input:checked + .btn-check:after {
   background: #5892fc;
 }
 
-.container-steps.sound .slider {
-  -webkit-transform: translate(-2400px);
-  -ms-transform: translate(-2400px);
-  transform: translate(-2400px);
+.container-steps.sound #form {
+  -webkit-transform: translate(-400%);
+  -ms-transform: translate(-400%);
+  transform: translate(-400%);
 }
 
 .container-steps.sound .step-start,
@@ -577,10 +589,10 @@ label.checkbox input:checked + .btn-check:after {
   background: #5892fc;
 }
 
-.container-steps.res .slider {
-  -webkit-transform: translate(-3000px);
-  -ms-transform: translate(-3000px);
-  transform: translate(-3000px);
+.container-steps.res #form {
+  -webkit-transform: translate(-500%);
+  -ms-transform: translate(-500%);
+  transform: translate(-500%);
 }
 
 .container-steps.res .step-start,
@@ -612,10 +624,10 @@ label.checkbox input:checked + .btn-check:after {
   background: #5892fc;
 }
 
-.container-steps.clip .slider {
-  -webkit-transform: translate(-3600px);
-  -ms-transform: translate(-3600px);
-  transform: translate(-3600px);
+.container-steps.clip #form {
+  -webkit-transform: translate(-600%);
+  -ms-transform: translate(-600%);
+  transform: translate(-600%);
 }
 
 .container-steps.clip .step-start,
@@ -664,7 +676,7 @@ $panel-default-heading-bg: #161618;
 }
 
 .title {
-  font-size: 84px;
+  font-size: 40px;
 }
 
 .links > a {
@@ -738,6 +750,10 @@ $panel-default-heading-bg: #161618;
   font-size: 2em;
 }
 
+.progress {
+  margin: 0 20px 15px 20px;
+}
+
 .panel-container {
   padding-right: 0 !important;
   padding-left: 0 !important;
@@ -799,8 +815,12 @@ $panel-default-heading-bg: #161618;
   background-color: #161618;
 }
 
+.container-steps-wrapper {
+  width: 100%;
+}
+
 .container .jumbotron a {
-  color: #333333;
+  color: #aaa;
   &:hover {
     color: #EE4D2E;
     cursor: pointer;
@@ -824,3 +844,42 @@ body {
   text-transform: uppercase;
 }
 
+@media only screen and (max-width: 600px) {
+  .slider-form h2 {
+    margin-bottom: 20px;
+    margin-top: 0;
+  }
+  .label-ctr {
+    margin-bottom: 20px;
+  }
+
+  .jumbotron {
+    padding-bottom: 0;
+  }
+
+  .slider-form [type="text"] {
+    margin-bottom: 5px;
+  }
+
+  .slider-form.slider-sound #slider {
+    margin: 0 10px;
+  }
+
+  #mode-wrapper, #game-area {
+    display: none;
+  }
+}
+
+.choose.back, .sound.back {
+  margin-top: 20px;
+}
+
+.slider-form.slider-clip {
+  .clip.back {
+    margin-top: 10px;
+  }
+
+  .clip.next {
+    margin-top: 1px;
+  }
+}
