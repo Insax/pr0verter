@@ -18,11 +18,16 @@ pr0verter is a Web Application for manipulating Video Data with FFmpeg.
 ## Install instructions
 Download this Repository via Clone or Zip Download <br>
 Run `composer install`, `cp .env.example .env`, `php artisan key:generate`<br>
+Run `npm install`<br>
 
 Edit .env to your needs <br>
 Run `php artisan migrate` <br>
-If your queue driver is database, run `php artisan queue:work --queue=convert,download` otherwise your Videos won't get converted and/or downloaded.
+If your queue driver is database, run `php artisan queue:work --queue=convert,download --tries=2` otherwise your Videos won't get converted and/or downloaded.
 
+## Debug
+- php artisan serve
+- npm run watch
+- php artisan queue:work --queue=convert,download
 
 ###Important notes for .env: <br>
 You NEED an <a href="https://github.com/settings/tokens">Github Access Token</a> for the changelog to work <br>
