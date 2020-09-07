@@ -95,7 +95,7 @@
                                         auswählen</h2>
 
                                     <div class="file-area" id="file-area">
-                                        <input type="file" name="file" id="file" required="required"/>
+                                        <input type="file" name="file" id="file" required="required" accept=".webm, .mp4, .mkv, .mov, .avi, .wmv, .flv,.3gp, .gif"/>
                                         <div class="file-dummy">
                                             <span class="default">Bitte ein Video auswählen!</span>
                                             <span class="success">Video akzeptiert.</span>
